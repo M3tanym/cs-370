@@ -16,10 +16,13 @@ CXX=/usr/bin/g++
 
 main: main.cc HandSignal.cc HandSignalCollection.cc
 	$(CXX) -std=c++14 -Wall -g -I../include main.cc HandSignal.cc HandSignalCollection.cc -o main $(LEAP_LIBRARY)
+    
+testFButtons: testFButtons.cc FingerButtons.cc
+	$(CXX) -std=c++14 -Wall -g -I../include testFButtons.cc FingerButtons.cc -o testFButtons $(LEAP_LIBRARY)
 
 ifeq ($(OS), Darwin)
 	install_name_tool -change @loader_path/libLeap.dylib ../lib/libLeap.dylib main
 endif
 
 clean:
-	rm -rf main main.dSYM
+	rm -rf main main.dSYM testFButtons testFButtons.dSYM
