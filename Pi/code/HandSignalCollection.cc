@@ -87,7 +87,7 @@ bool HandSignalCollection::save() {
 
     if (savef) {
         savef << "#GS\n" << signals.size() << '\n';
-        for (int i = 0; i < signals.size(); i++) {
+        for (size_t i = 0; i < signals.size(); i++) {
             savef << names[i] << '\n' << commands[i] << '\n';
             HandSignal &hs = signals[i];
             savef << hs.fingers << '\n';
@@ -148,7 +148,7 @@ bool HandSignalCollection::add(HandSignal &hs, std::string &name, std::string &c
     return save();
 }
 
-bool HandSignalCollection::remove(int i) {
+bool HandSignalCollection::remove(size_t i) {
     if (i < signals.size()) {
         signals.erase(signals.begin() + i);
         names.erase(names.begin() + i);
@@ -164,7 +164,7 @@ bool HandSignalCollection::remove(int i) {
 }
 
 bool HandSignalCollection::remove(std::string &name) {
-    for (int i = 0; i < names.size(); i++) {
+    for (size_t i = 0; i < names.size(); i++) {
         if (names[i].compare(name) == 0) {
             return remove(i);
         }
@@ -189,7 +189,7 @@ std::string HandSignalCollection::getCommand(int i) const {
 }
 
 ostream &operator<<(ostream &os, const HandSignalCollection &hsc) {
-    for (int i = 0; i < hsc.signals.size(); i++) {
+    for (size_t i = 0; i < hsc.signals.size(); i++) {
         os << "Signal " << i << ": " << hsc.names[i] << " (" << hsc.getNumFingers(i) << " fingers)\n";
     }
     return os;

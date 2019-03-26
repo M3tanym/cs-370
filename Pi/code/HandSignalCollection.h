@@ -6,7 +6,7 @@ class HandSignalCollection {
       HandSignalCollection();
       bool save();
       bool add(HandSignal &hs, std::string &name, std::string &command);
-      bool remove(int i);
+      bool remove(size_t i);
       bool remove(std::string &name);
       std::string getName(int i) const;
       std::string getCommand(int i) const;
