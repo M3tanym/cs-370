@@ -9,7 +9,7 @@ using namespace std;
 
 constexpr int PORT = 2342; // Arbitarily chosen value (> 1024)
 
-bool running = true; // im lazy
+static bool running = true; // sorry Jack
 
 void catchIntr(int)
 {
