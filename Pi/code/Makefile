@@ -14,12 +14,20 @@ endif
 
 CXX=/usr/bin/g++
 
-main: main.cc HandSignal.cc HandSignalCollection.cc
-	$(CXX) -std=c++14 -Wall -g -I../include main.cc HandSignal.cc HandSignalCollection.cc -o main $(LEAP_LIBRARY)
 
+
+main: main.cc HandSignal.cc HandSignalCollection.cc
+	$(CXX) -std=c++14 -Wall -g -I../include main.cc HandSignal.cc HandSignalCollection.cc -o $@ $(LEAP_LIBRARY)
+	make fixLib exName=$@
+
+testFButtons: testFButtons.cc FingerButtons.cc
+	$(CXX) -std=c++14 -Wall -g -I../include testFButtons.cc FingerButtons.cc -o $@ $(LEAP_LIBRARY)
+	make fixLib exName=$@
+
+fixLib:
 ifeq ($(OS), Darwin)
-	install_name_tool -change @loader_path/libLeap.dylib ../lib/libLeap.dylib main
+	install_name_tool -change @loader_path/libLeap.dylib ../lib/libLeap.dylib $(exName)
 endif
 
 clean:
-	rm -rf main main.dSYM
+	rm -rf main main.dSYM testFButtons testFButtons.dSYM
