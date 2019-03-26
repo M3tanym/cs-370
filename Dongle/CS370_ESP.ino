@@ -22,7 +22,7 @@ void setup()
   Serial.begin(BAUD);
   Serial.println("Starting...");
   WiFi.mode(WIFI_STA);
-  WiFi.begin("DIRECT-17-HP", "Pseudonym");
+  WiFi.begin("SSID", "Password");
 
   connectWifi();
 
