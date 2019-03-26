@@ -67,6 +67,8 @@ void EventListener::onFrame(const Controller& controller) {
     
     // call the appropriate handlers
     resetStatus();
+    // this method will call appropriate event handlers. This isn't the only way to use this class:
+    // you could instead just call the individual .isPressedDown(id) methods
     fButtons.checkButtonPresses();
     cout << status << endl;
 }
