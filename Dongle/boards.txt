@@ -1,0 +1,43 @@
+# Taken from SparkFun XInput boards config file
+
+menu.cpu=Processor
+
+################################################################################
+#################################### XBen ######################################
+################################################################################
+promicro.name=XBen Controller
+
+promicro.upload.tool=avrdude
+promicro.upload.protocol=avr109
+promicro.upload.maximum_size=28672
+promicro.upload.maximum_data_size=2560
+promicro.upload.speed=57600
+promicro.upload.disable_flushing=true
+promicro.upload.use_1200bps_touch=true
+promicro.upload.wait_for_upload_port=true
+
+promicro.bootloader.tool=avrdude
+promicro.bootloader.unlock_bits=0x3F
+promicro.bootloader.lock_bits=0x2F
+promicro.bootloader.low_fuses=0xFF
+promicro.bootloader.high_fuses=0xD8
+
+promicro.build.board=AVR_PROMICRO
+promicro.build.core=xinput:arduino
+promicro.build.variant=promicro
+promicro.build.mcu=atmega32u4
+promicro.build.usb_product="XBen Controller"
+promicro.build.vid=0x045E
+promicro.build.usb_manufacturer="XBen"
+promicro.build.extra_flags={build.usb_flags}
+
+######################### Pro Micro 3.3V / 8MHz ################################
+promicro.menu.cpu.8MHzatmega32U4=ATmega32U4 (3.3V, 8 MHz)
+
+promicro.menu.cpu.8MHzatmega32U4.build.pid.0=0x9203
+promicro.menu.cpu.8MHzatmega32U4.build.pid.1=0x9204
+promicro.menu.cpu.8MHzatmega32U4.build.pid=0x028E
+promicro.menu.cpu.8MHzatmega32U4.build.f_cpu=8000000L
+
+promicro.menu.cpu.8MHzatmega32U4.bootloader.extended_fuses=0xFE
+promicro.menu.cpu.8MHzatmega32U4.bootloader.file=caterina/Caterina-promicro8.hex
