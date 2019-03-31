@@ -1,5 +1,5 @@
-#ifndef mainH
-#define mainH
+#ifndef testGesture_DEFINED
+#define testGesture_DEFINED
 
 #include <string>
 

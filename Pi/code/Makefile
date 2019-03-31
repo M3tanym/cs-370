@@ -16,12 +16,20 @@ CXX=/usr/bin/g++
 
 
 
-main: main.cc HandSignal.cc HandSignalCollection.cc
-	$(CXX) -std=c++14 -Wall -g -I../include main.cc HandSignal.cc HandSignalCollection.cc -o $@ $(LEAP_LIBRARY)
+main: main.cc UDPJoystick.cc FingerButtons.cc
+	$(CXX) -std=c++14 -Wall -g -I../include main.cc UDPJoystick.cc FingerButtons.cc -o $@ $(LEAP_LIBRARY)
+	make fixLib exName=$@
+
+testGesture: testGesture.cc HandSignal.cc HandSignalCollection.cc
+	$(CXX) -std=c++14 -Wall -g -I../include testGesture.cc HandSignal.cc HandSignalCollection.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
 
 testFButtons: testFButtons.cc FingerButtons.cc
 	$(CXX) -std=c++14 -Wall -g -I../include testFButtons.cc FingerButtons.cc -o $@ $(LEAP_LIBRARY)
+	make fixLib exName=$@
+
+testUDPJoystick: testUDPJoystick.cc UDPJoystick.cc Joystick.cc
+	$(CXX) -std=c++14 -Wall -g -I../include -l SDL2 testUDPJoystick.cc UDPJoystick.cc Joystick.cc -o $@
 	make fixLib exName=$@
 
 fixLib:
@@ -30,4 +38,4 @@ ifeq ($(OS), Darwin)
 endif
 
 clean:
-	rm -rf main main.dSYM testFButtons testFButtons.dSYM
+	rm -rf main testGesture testFButtons testUDPJoystick *.dSYM

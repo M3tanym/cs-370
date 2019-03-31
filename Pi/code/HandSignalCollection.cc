@@ -5,7 +5,7 @@
 #include <string>
 
 #include "Leap.h"
-#include "main.h"
+#include "testGesture.h"
 #include "HandSignal.h"
 #include "HandSignalCollection.h"
 
@@ -30,9 +30,9 @@ HandSignalCollection::HandSignalCollection() {
                 commands.push_back(line);
 
                 f >> hs.fingers;
-                
+
                 f >> hs.settings.fingerLengthDiff >> hs.settings.positionDiff >> hs.settings.directionDiff;
-                
+
                 for (int j = 0; j < hs.fingers; j++) {
                     int x;
                     f >> x;

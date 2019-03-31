@@ -64,7 +64,7 @@ void EventListener::onFrame(const Controller& controller) {
     // Get the most recent frame and tell FingerButtons about it
     const Frame frame = controller.frame();
     fButtons.updateFrame(frame);
-    
+
     // call the appropriate handlers
     resetStatus();
     fButtons.checkButtonPresses();
@@ -99,17 +99,17 @@ void EventListener::onServiceDisconnect(const Controller& controller) {
 
 int main(int argc, const char* argv[])
 {
-    
+
   // initialize fButtons
   fButtons.setAllCallbacks(changeStatus);
-  
+
   // set all sensitivies to 0.25
   fsensitivity_t s;
   for (int i = 0; i < 10; i++) {
       s.fingerSensitivities[i] = 0.25;
   }
   fButtons.setSensitivity(s);
-  
+
   // Create a sample listener and controller
   EventListener listener;
   Controller controller;
