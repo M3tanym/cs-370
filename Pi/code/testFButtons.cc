@@ -108,7 +108,7 @@ int main(int argc, const char* argv[])
   // set all sensitivies to 0.25
   fsensitivity_t s;
   for (int i = 0; i < 10; i++) {
-      s.fingerSensitivities[i] = 0.25;
+      s.fingerSensitivities[i] = 0.40;
   }
   fButtons.setSensitivity(s);
   
