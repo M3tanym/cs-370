@@ -67,6 +67,8 @@ void EventListener::onFrame(const Controller& controller) {
 
     // call the appropriate handlers
     resetStatus();
+    // this method will call appropriate event handlers. This isn't the only way to use this class:
+    // you could instead just call the individual .isPressedDown(id) methods
     fButtons.checkButtonPresses();
     cout << status << endl;
 }
@@ -103,10 +105,10 @@ int main(int argc, const char* argv[])
   // initialize fButtons
   fButtons.setAllCallbacks(changeStatus);
 
-  // set all sensitivies
+  // set all sensitivies to 0.25
   fsensitivity_t s;
   for (int i = 0; i < 10; i++) {
-      s.fingerSensitivities[i] = 0.4;
+      s.fingerSensitivities[i] = 0.40;
   }
   fButtons.setSensitivity(s);
 
