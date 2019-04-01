@@ -4,7 +4,7 @@
 #include <cstdlib>
 
 #include "Leap.h"
-#include "main.h"
+#include "testGesture.h"
 #include "HandSignal.h"
 
 using namespace Leap;
@@ -59,14 +59,14 @@ HandSignal::HandSignal(const Hand &hand) {
             }
         }
     }
-    
+
     float offset[20][3];
     for (i = 0; i < fingers; i++) {
         for (int w = 0; w < 3; w++) {
             offset[i][w] = boneStarts[i][0][w];
         }
     }
-    
+
     for (i = 0; i < fingers; i++) {
         for (int b = 0; b < 4; b++) {
             for (int w = 0; w < 3; w++) {
