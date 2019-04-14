@@ -35,6 +35,9 @@ class Joysticks
         // returns the y coordinate of the palm of the hand specified by handLetter
         float getPalmY(char handLetter);
     
+        // returns the z coordinate of the palm of the hand specified by handLetter
+        float getPalmZ(char handLetter);
+    
     private:
     // call Hand::isValid() to see if the hands are in the frame or not
         Leap::Hand leftHand, rightHand;
