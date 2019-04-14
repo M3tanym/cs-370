@@ -23,9 +23,6 @@ class Joysticks
         // returns true if hand handLetter is considered "down" depending on the hsensitivity settings
         bool isPressedDown(char handLetter) const;
 
-        // checks palms for joystick button presses and calls appropriate functions
-        bool checkJoystickPresses() const;
-
         // change sensitivity settings
         void setSensitivity(const hsensitivity_t &hs);
                
