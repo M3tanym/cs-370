@@ -1,6 +1,7 @@
 #ifndef Joysticks_H_INCLUDED
 #define Joysticks_H_INCLUDED
 
+#include <iostream>
 #include "Leap.h"
 
 typedef struct handConfig_s {
