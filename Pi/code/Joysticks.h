@@ -5,10 +5,19 @@
 #include "Leap.h"
 
 typedef struct handConfig_s {
-    //diameter, in mm, of the circular area around the center of the joystick that does not respond to movement
+    // diameter, in mm, of the circular area around the center of the joystick that does not respond to movement
     double joystickDeadzone;
-    //height, in mm, that a hand must go below in order for a joystick button to be clicked
+    
+    // height, in mm, that a hand must go below in order for a joystick button to be clicked
     double handDepthSensitivity;
+    
+    // array of values representing the amount, in mm, to offset the palm position of each hand
+    // elements in the array are as follows:
+    //      0 : left hand x offset
+    //      1 : left hand z offset
+    //      2 : right hand x offset
+    //      3 : right hand z offset
+    double palmOffsets[4];
 
 } hsensitivity_t;
 
