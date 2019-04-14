@@ -50,19 +50,32 @@ bool Joysticks::isPressedDown(char handLetter) const
         return false;
     }
   
-    double currHeight = hand.getPalmY(handLetter);
+    double currHeight = hand.getPalmCoord(handLetter, 'Y');
   
     return currHeight <= config.handDepthSensitivity;
 }
 
-// checks palms for joystick button presses and calls appropriate functions
-bool checkJoystickPresses() const;
+void Joysticks::setSensitivity(const hsensitivity_t &hs)
+{
+    config = hs;
+}
 
-// change sensitivity settings
-void setSensitivity(const hsensitivity_t &hs);
+float Joysticks::getPalmCoord(char handLetter, char axis)
+{
+    Vector handCenter;
+    int intAxis;
+    
+    //determine what hand to look at
+    if      (handLetter == 'L' || handLetter == 'l')    handCenter = leftHand.palmPosition();
+    else if (handLetter == 'R' || handLetter == 'r')    handCenter = rightHand.palmPosition();
+    else throw ("Error: could not determine hand from given hand letter: "s + string(handLetter));
+    
+    //determine what axis to access in the vector
+    if      (axis == 'X' || axis == 'x')     intAxis = 0;
+    else if (axis == 'Y' || axis == 'y')     intAxis = 1;
+    else if (axis == 'Z' || axis == 'z')     intAxis = 2;
+    else throw ("Error: could not determine axis from given letter: "s + string(axis));
+    
+    return handCenter[intAxis];
+}
 
-// returns the x coordinate of the palm of the hand specified by handLetter
-float getPalmX(char handLetter);
-
-// returns the y coordinate of the palm of the hand specified by handLetter
-float getPalmY(char handLetter);
