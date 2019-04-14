@@ -27,14 +27,8 @@ class Joysticks
         // change sensitivity settings
         void setSensitivity(const hsensitivity_t &hs);
                
-        // returns the x coordinate of the palm of the hand specified by handLetter
-        float getPalmX(char handLetter);
-        
-        // returns the y coordinate of the palm of the hand specified by handLetter
-        float getPalmY(char handLetter);
-    
-        // returns the z coordinate of the palm of the hand specified by handLetter
-        float getPalmZ(char handLetter);
+        // returns the coordinate of the palm of the hand specified by handLetter and on the axis given
+        float getPalmCoord(char handLetter, char axis);
     
     private:
     // call Hand::isValid() to see if the hands are in the frame or not
