@@ -22,7 +22,7 @@ class Dpad {
         bool right(const Hand &hand) const;
     
     //private:  
-        enum hands{0, 1};
+        enum hands{leftHand = 0, rightHand = 1};
         
 };
 #endif
