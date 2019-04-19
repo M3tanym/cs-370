@@ -4,19 +4,25 @@ using namespace Leap;
 
 //need to implement edge cases (non-adjacent pitch and roll)
 
-//update frame method--update hand tilt position
+//update frame method--update hand tilt position--code for this method straight from the D Hallstrom
 void Dpad::updateFrame(const Leap::Frame &frame) {
-    //for each hand, update hand variables/tilt
-    tilt = false;
-     for (const Hand &h: frame.hands()) {
-         if(h.isValid()){
-              if(h.palmNormal().roll()!=0 || h.direction().pitch()!=0)
-                    tilt = true;
-              if((up(h) == true && down(h) == true) || (right(h) == true && left(h) == true)){
-                    h.direction.pitch() = 0;
-                    h.palmNormal.roll() = 0;
-              }
-         }
+     // remove past hands so if a hand was moved out of the frame, we don't consider it (0 is left, 1 is right)
+    leftHand = Hand::invalid();
+    rightHand = Hand::invalid();
+    
+    // look through hands and set the appropriate variables.
+    // if there are multiple left hands, for example, which one
+    // is chosen is unspecified (hands() uses an arbitrary ordering)
+    for (const Hand &h: frame.hands()) {
+        if (h.isValid()) {
+            if (h.isLeft()) {
+                leftHand = h;
+            }
+            else if (h.isRight()) {
+                rightHand = h;
+            }
+        }
+    }           
 }
 
 //returns true if hand tilted "up" depending on pitch position (gets tilt around x axis)
@@ -37,7 +43,7 @@ bool Dpad::up(const Hand &hand) const {
 
 //returns true if hand tilted "down" depending on pitch position (gets tilt around x axis)
 //pitch returns positive value if in "down" direction (I think--need to test with leap to make sure)
-bool Dpad::up(const Hand &hand) const {
+bool Dpad::down(const Hand &hand) const {
     float pitch = hand.direction().pitch();
     
     if(pitch >= 0 && pitch <=180){
