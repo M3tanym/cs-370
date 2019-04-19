@@ -1,4 +1,6 @@
 .DS_Store
 Pi/code/main
-Pi/code/main.dSYM/
-UDPJoystick/main
+Pi/code/testGesture
+Pi/code/testFButtons
+Pi/code/testUDPJoystick
+Pi/code/*.dSYM/

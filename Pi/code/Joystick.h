@@ -1,7 +1,7 @@
 #ifndef Joystick_DEFINED
 #define Joystick_DEFINED
 
-#include <SDL.h>
+#include "SDL/SDL.h"
 #include <thread>
 
 class Joystick
@@ -9,7 +9,6 @@ class Joystick
 	public:
 		Joystick(int desiredID = 0);
 		~Joystick();
-		void update();
 		void close();
 		int leftStickX = 0, leftStickY = 0, leftRotation = 0;
 		int rightStickX = 0, rightStickY = 0, rightRotation = 0;
@@ -23,6 +22,7 @@ class Joystick
 		int id;
 		bool running;
 		std::thread t;
+		void update();
 };
 
 #endif

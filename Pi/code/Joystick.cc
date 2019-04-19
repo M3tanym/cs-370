@@ -1,5 +1,5 @@
 #include "Joystick.h"
-#include <SDL.h>
+#include "SDL/SDL.h"
 #include <stdexcept>
 #include <thread>
 

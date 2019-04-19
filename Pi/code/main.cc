@@ -1,83 +1,77 @@
 #include <iostream>
 #include <fstream>
-#include <cstring>
-#include <unistd.h>
+#include <string>
 #include <vector>
 #include <chrono>
-#include <stdlib.h> // :( for system()
+#include <cstring>
+#include <unistd.h>
+#include <stdlib.h>
 
+#include "UDPJoystick.h"
 #include "Leap.h"
-#include "main.h"
-#include "HandSignal.h"
-#include "HandSignalCollection.h"
+#include "FingerButtons.h"
 
 using namespace std;
 using namespace Leap;
 
-static int mode = 0;
-static HandSignalCollection gestureCollection;
+/******************** GLOBAL VARIABLES ********************/
 
-ostream &operator<<(ostream &o, const FingerList &fingers)
+constexpr int DEBUG = 0; // Debug level flag (0: off, 1: few, 2: more, 3: all)
+constexpr int PORT = 2342; // Arbitarily chosen value (> 1024). Must also be set in ESP code
+constexpr int PACKETDELAY = 30; // Empirically obtained optimal delay time (ms)
+static bool running = true; // running flag
+static FingerButtons fButtons;
+static char fingerState[12] = "||||/ \\||||";
+
+/******************** VARIOUS FUNCTIONS ********************/
+
+void catchIntr(int)
 {
-  for (FingerList::const_iterator fl = fingers.begin(); fl != fingers.end(); ++fl) {
-    const Finger finger = *fl;
-    if(!finger.isValid())
-    {
-      o << "[ERROR] invalid finger!!" << endl;
-      continue;
-    }
-    o  << string(4, ' ') << fingerNames[finger.type()]
-              << " finger, length: " << finger.length() << "mm" << endl;
-
-    // Get finger bones
-    for (int b = 0; b < 4; ++b) {
-      Bone::Type boneType = static_cast<Bone::Type>(b);
-      Bone bone = finger.bone(boneType);
-      o << string(6, ' ') <<  boneNames[boneType]
-                << " bone, start: " << bone.prevJoint()
-                << ", end: " << bone.nextJoint()
-                << ", direction: " << bone.direction() << endl;
-    }
-  }
-  return o;
+	cout << "[System] Exiting...\n";
+	running = false;
 }
 
-long currTime() {
-    return (chrono::duration_cast< chrono::milliseconds >(chrono::system_clock::now().time_since_epoch())).count();
+void resetStatus() {
+	const char *cpy = "||||/ \\||||";
+	for (int i = 0; i < 12; i++) {
+		fingerState[i] = cpy[i];
+	}
 }
 
+void changeStatus(int fingerId) {
+	if (fingerId >= 0 && fingerId < 5)
+		fingerState[fingerId] = '.';
+	else if (fingerId >= 5 && fingerId < 10)
+		fingerState[fingerId+1] = '.';
+}
+
+/******************** EVENT LISTENER ********************/
 
 class EventListener : public Listener {
   public:
-    virtual void onInit(const Controller&);
-    virtual void onConnect(const Controller&);
-    virtual void onDisconnect(const Controller&);
-    virtual void onExit(const Controller&);
-    virtual void onFrame(const Controller&);
-    virtual void onFocusGained(const Controller&);
-    virtual void onFocusLost(const Controller&);
-    virtual void onDeviceChange(const Controller&);
-    virtual void onServiceConnect(const Controller&);
-    virtual void onServiceDisconnect(const Controller&);
-
-  private:
+	  virtual void onInit(const Controller&);
+	  virtual void onConnect(const Controller&);
+	  virtual void onDisconnect(const Controller&);
+	  virtual void onExit(const Controller&);
+	  virtual void onFrame(const Controller&);
+	  virtual void onFocusGained(const Controller&);
+	  virtual void onFocusLost(const Controller&);
+	  virtual void onDeviceChange(const Controller&);
+	  virtual void onServiceConnect(const Controller&);
+	  virtual void onServiceDisconnect(const Controller&);
 };
 
 void EventListener::onInit(const Controller& controller) {
-  if(DEBUG > 1) cout << "[Controller] Initialized" << endl;
+   if(DEBUG > 0) cout << "[Controller] Initialized" << endl;
 }
 
 void EventListener::onConnect(const Controller& controller) {
-  if(DEBUG > 0) cout << "[Controller] Connected" << endl;
-  //controller.enableGesture(Gesture::TYPE_CIRCLE);
-  //controller.enableGesture(Gesture::TYPE_KEY_TAP);
-  //controller.enableGesture(Gesture::TYPE_SCREEN_TAP);
-  //controller.enableGesture(Gesture::TYPE_SWIPE);
+  if(DEBUG > 1) cout << "[Controller] Connected" << endl;
 }
 
 void EventListener::onDisconnect(const Controller& controller) {
-  // Note: not dispatched when running in a debugger.
-  if(DEBUG > 0) cout << "[Controller] Disconnected" << endl;
+   // Note: not dispatched when running in a debugger.
+   if(DEBUG > 1) cout << "[Controller] Disconnected" << endl;
 }
 
 void EventListener::onExit(const Controller& controller) {
@@ -85,96 +79,22 @@ void EventListener::onExit(const Controller& controller) {
 }
 
 void EventListener::onFrame(const Controller& controller) {
-  static long last_call = 0;
-  static int last_command_id = -1;
-  static string commStr = "";
-  if (mode == 0)
-    return;
-  // Get the most recent frame and report some basic information
-  const Frame frame = controller.frame();
+	// Get the most recent frame and tell FingerButtons about it
+	const Frame frame = controller.frame();
+	fButtons.updateFrame(frame);
 
-  if(DEBUG > 3) cout << "hands: " << frame.hands().count() << ", fingers: " << frame.fingers().extended().count() << endl;
-  HandList hands = frame.hands();
-  if(hands.count() < 1)
-    return;
-  // Get the first hand
-  const Hand hand = *hands.begin();
-  string handType = hand.isLeft() ? "Left hand" : "Right hand";
-  if(DEBUG > 1) cout << "[Listener] " << handType << " pos: " << hand.palmPosition() << ", extended fingers: " << hand.fingers().extended().count() << endl;
-
-  // Get fingers
-  sensitivity_t s = {50, 60, 0.55};
-
-  // Clear timed out modifiers
-  if(commStr.size() > 0 && last_call + 4000 < currTime())
-  {
-    commStr = "";
-    cout << "[Listener] Cleared command modifier." << endl;
-  }
-
-  if(mode == 1) // normal operation
-  {
-    int i = 0;
-    for(const HandSignal &h : gestureCollection.signals)
-    {
-      // send the hand be to processed
-      if(DEBUG > 1) cout << "[Listener] Signal " << i << ": match? ";
-      int errorCode = 0;
-      bool success = h.matchesSignal(hand, errorCode);
-      string nextPart = gestureCollection.getCommand(i);
-      if(DEBUG > 1) cout << " " << (success ? "Yes" : "No") << ", code:  " << errorCode << endl;
-      if(success && ((last_call + 500 < currTime() && last_command_id != i) || (last_call + 2000 < currTime())) && (commStr.size() == 0 || nextPart[0] != '$'))
-      {
-        cout << "[Listener] Gesture " << gestureCollection.getName(i) << " triggered!" << endl;
-        if (nextPart[0] == '$' && last_command_id != i) // just a modifier
-        {
-          commStr += nextPart.substr(1) + "_";
-          last_call = currTime();
-          last_command_id = i;
-        }
-        else if(nextPart[0] != '$') // actually execute!
-        {
-          commStr += nextPart;
-          last_call = currTime();
-          last_command_id = i;
-          // exec call
-          string temp = "./" + commStr + " >& /dev/null";
-          if(system(temp.c_str()) != 0)
-            cout << "No such command " << commStr << "!" << endl;
-          else
-            cout << "Ran command " << commStr <<  "!" << endl;
-          commStr = "";
-          last_call += 1000;
-          return;
-        }
-      }
-      i++;
-    }
-  }
-  else if(mode == 2)
-  {
-    // Send the vector to train
-    if(DEBUG > 2) cout << "[Listener] Sending training vector!" << endl;
-    if(DEBUG > 2) cout << "[Listener] Last seen Hand was:\n" << hand.fingers() << endl;
-    HandSignal hs(hand , s);
-    cout << "Saw extended fingers: " << hand.fingers().extended().count() << endl;
-    string gname, gcomm;
-    cout << "Enter name for new gesture: ";
-    cin >> gname;
-    cout << "Enter script name: ";
-    cin >> gcomm;
-    gestureCollection.add(hs, gname, gcomm);
-    if(DEBUG > 2) cout << "[Listener] HandSignal is:\n" << hs << endl;
-    mode = 0; // exit training mode
-  }
+	// call the appropriate handlers
+	resetStatus();
+	fButtons.checkButtonPresses();
+	// cout << fingerState << endl;
 }
 
 void EventListener::onFocusGained(const Controller& controller) {
-  if(DEBUG > 0) cout << "[Controller] Focus Gained" << endl;
+   if(DEBUG > 1) cout << "[Controller] Focus Gained" << endl;
 }
 
 void EventListener::onFocusLost(const Controller& controller) {
-  if(DEBUG > 0) cout << "[Controller] Focus Lost" << endl;
+   if(DEBUG > 1) cout << "[Controller] Focus Lost" << endl;
 }
 
 void EventListener::onDeviceChange(const Controller& controller) {
@@ -188,76 +108,76 @@ void EventListener::onDeviceChange(const Controller& controller) {
 }
 
 void EventListener::onServiceConnect(const Controller& controller) {
-  if(DEBUG > 0) cout << "[Controller] Service Connected" << endl;
+  if(DEBUG > 1) cout << "[Controller] Service Connected" << endl;
 }
 
 void EventListener::onServiceDisconnect(const Controller& controller) {
-  if(DEBUG > 0) cout << "[Controller] Service Disconnected" << endl;
+  if(DEBUG > 1) cout << "[Controller] Service Disconnected" << endl;
 }
 
-int main(int argc, const char* argv[])
+/******************** MAIN ********************/
+
+int main(int argc, char **argv)
 {
-  // Create a sample listener and controller
-  EventListener listener;
-  Controller controller;
+	cout << "[System] Running!\n";
+	signal(SIGINT, catchIntr); // catch ^C with the catchIntr() function
 
-  // Have the listener receive events from the controller
-  controller.addListener(listener);
+	// Create a sample listener and controller
+	EventListener listener;
+	Controller controller;
 
-  bool running = true;
-  while (running)
-  {
-    string command = "";
-    cout << "Typey > ";
-    cin >> command;
-    if (command.compare("exit") == 0)
-    {
-        running = false;
-    }
-    else if (command.compare("run") == 0)
-    {
-        mode = 1;
-        cout << "Running" << endl;
-    }
-    else if (command.compare("pause") == 0)
-    {
-        mode = 0;
-        cout << "Paused" << endl;
-    }
-    else if (command.compare("train") == 0)
-    {
-      cin.get();
-      cout << "Prepare gesture, and press enter...";
-      cin.get();
-      cout << "Training..." << endl;
-      sleep(1);
-      mode = 2;
-      while(mode == 2); // handler will change mode
-      cout << "Done!" << endl;
-    }
-    else if (command.compare("remove") == 0)
-    {
-      string target = "";
+	// Have the listener receive events from the controller
+	controller.addListener(listener);
 
-      cin >> target;
-      string success = gestureCollection.remove(target) ? "Removed " : "Couldn't find ";
-      cout << success << target << endl;
-    }
-    else if (command.compare("list") == 0)
-    {
-      cout << gestureCollection << endl;
-    }
-    else if (command.compare("help") == 0)
-    {
-      cout << "Commands: run, pause, train, remove, list, help" << endl;
-    }
-    else
-    {
-      cout << "Unknown command!" << endl;
-    }
-  }
-  cout << "[System] Exiting..." << endl;
+	// Open the UDP port
+	UDPJoystick udp(PORT, PACKETDELAY);
+
+	// Initialize fButtons
+	fButtons.setAllCallbacks(changeStatus);
+
+	// Set all sensitivies
+	fsensitivity_t s;
+	for (int i = 0; i < 10; i++) {
+		s.fingerSensitivities[i] = 0.4;
+	}
+	fButtons.setSensitivity(s);
+
+  // Connect to the dongle
+	cout << "[System] Setup complete! Waiting for dongle...\n";
+	while(running && !udp.waitForClient()); // wait until client sends a packet
+
+	if(running) cout << "[System] Dongle Identified! (" << udp.getClientIP() << ")\n";
+
+	while(running) // Runs until ^C
+	{
+		joystickState js;
+		// TODO Change these to real values
+		js.buttonA = !(fingerState[0] == '|');
+		js.buttonB = !(fingerState[1] == '|');
+		js.buttonX = !(fingerState[2] == '|');
+		js.buttonY = !(fingerState[3] == '|');
+		js.buttonBack = 0;
+		js.buttonGuide = 0;
+		js.buttonStart = 0;
+		js.buttonLeftStick = !(fingerState[4] == '/');
+		js.buttonRightStick = !(fingerState[6] == '\\');
+		js.buttonLeftBumper = 0;
+		js.buttonRightBumper = 0;
+		js.buttonDUp = 0;
+		js.buttonDDown = 0;
+		js.buttonDLeft = 0;
+		js.buttonDRight = 0;
+		js.leftStickX = 0;
+		js.leftStickY = 0;
+		js.leftTrigger = 0;
+		js.rightStickX = 0;
+		js.rightStickY = 0;
+		js.rightTrigger = 0;
+
+		udp.update(js);
+	}
+
   // Remove the sample listener when done
   controller.removeListener(listener);
-  return 0;
+	return 0;
 }
