@@ -20,9 +20,9 @@ class Dpad {
         
         //returns true if d-pad pressed right
         bool right(const Hand &hand) const;
-        
-        //for determining if hand tilt is occuring
-        bool tilt;	
+    
     //private:  
+        enum hands{0, 1};
+        
 };
 #endif
