@@ -12,8 +12,10 @@ void Dpad::updateFrame(const Leap::Frame &frame) {
          if(h.isValid()){
               if(h.palmNormal().roll()!=0 || h.direction().pitch()!=0)
                     tilt = true;
-              //if((up(h) == true && down(h) == true) || (right(h) == true && left(h) == true))
-                    //tilt = false;
+              if((up(h) == true && down(h) == true) || (right(h) == true && left(h) == true)){
+                    h.direction.pitch() = 0;
+                    h.palmNormal.roll() = 0;
+              }
          }
 }
 
