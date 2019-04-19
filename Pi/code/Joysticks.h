@@ -37,13 +37,13 @@ class Joysticks
         void setSensitivity(const hsensitivity_t &hs);
                
         // returns the coordinate of the palm of the hand specified by handLetter and on the axis given
-        float getPalmCoord(char handLetter, char axis);
+        float getPalmCoord(char handLetter, char axis) const;
     
     private:
     // call Hand::isValid() to see if the hands are in the frame or not
         Leap::Hand leftHand, rightHand;
 
         hsensitivity_t config;
-}
+};
 
 #endif

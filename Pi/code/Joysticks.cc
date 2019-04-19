@@ -1,5 +1,7 @@
 #include "Joysticks.h"
+#include <string>
 
+using namespace std;
 using namespace Leap;
 
 void Joysticks::updateFrame(const Leap::Frame &frame) //copied from FingerButtons.cc
@@ -29,28 +31,19 @@ bool Joysticks::areHandsVisible() const //copied from FingerButtons.cc
 }
 
 bool Joysticks::isPressedDown(char handLetter) const
-{
-    Vector handCenter;
-    Hand hand;
-  
-    if(handLetter == 'L')
+{  
+    if(handLetter == 'L' || handLetter == 'l')
     {
         if(!leftHand.isValid()) return false;
-        
-        hand = leftHand;
-        handCenter = leftHand.palmPosition();
     }
-    else if (handLetter == 'R') {
+    else if (handLetter == 'R' || handLetter == 'r') {
        if(!rightHand.isValid()) return false;
-        
-        hand = rightHand;
-        handCenter = rightHand.palmPosition();
     }
     else {
         return false;
     }
   
-    double currHeight = hand.getPalmCoord(handLetter, 'Y');
+    double currHeight = getPalmCoord(handLetter, 'Y');
   
     return currHeight <= config.handDepthSensitivity;
 }
@@ -60,7 +53,8 @@ void Joysticks::setSensitivity(const hsensitivity_t &hs)
     config = hs;
 }
 
-float Joysticks::getPalmCoord(char handLetter, char axis)
+//returns the palm position corresponding to the axis specified 
+float Joysticks::getPalmCoord(char handLetter, char axis) const
 {
     Vector handCenter;
     int intAxis;
@@ -68,13 +62,13 @@ float Joysticks::getPalmCoord(char handLetter, char axis)
     //determine what hand to look at
     if      (handLetter == 'L' || handLetter == 'l')    handCenter = leftHand.palmPosition();
     else if (handLetter == 'R' || handLetter == 'r')    handCenter = rightHand.palmPosition();
-    else throw ("Error: could not determine hand from given hand letter: "s + string(handLetter));
+    else throw ("Error: could not determine hand from given hand letter: "s + handLetter);
     
     //determine what axis to access in the vector
     if      (axis == 'X' || axis == 'x')     intAxis = 0;
     else if (axis == 'Y' || axis == 'y')     intAxis = 1;
     else if (axis == 'Z' || axis == 'z')     intAxis = 2;
-    else throw ("Error: could not determine axis from given letter: "s + string(axis));
+    else throw ("Error: could not determine axis from given letter: "s + axis);
     
     return handCenter[intAxis];
 }
