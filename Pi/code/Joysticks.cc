@@ -86,6 +86,16 @@ float Joysticks::getPalmCoord(char handLetter, char axis) const
 	//	if ((handLetter == 'L' || handLetter == 'l') && (handPos[intAxis] > 0)) // is the left hand x positive?
 	//		return 128.0;
 	//}
+	if (handLetter == 'L' || handLetter == 'l')
+	{
+		if (!leftHand.isValid()) return 128.0;
+	}
+	else if (handLetter == 'R' || handLetter == 'r') {
+		if (!rightHand.isValid()) return 128.0;
+	}
+	else {
+		return 128.0;
+	}
 
 	joystickVal = handPos[intAxis] - config.palmOffsets[offsetIndex];
 
