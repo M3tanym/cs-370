@@ -8,7 +8,7 @@ class Dpad {
     public:
     
         //type Hands
-        enum Hands{leftHand = 0, rightHand = 1};
+        enum Hands{leftHand, rightHand};
     
         // call each time you receive a new frame
         void updateFrame(const Leap::Frame &frame);   
@@ -25,8 +25,8 @@ class Dpad {
         //returns true if d-pad pressed right
         bool right(Hands h) const;
     private:
-        Leap::Hand Dpad::whichHand(Hands h)
-        Leap::Hand leftHand, rightHand;
+        Leap::Hand Dpad::whichHand(Hands h);
+        Leap::Hand left, right;
         
 };
 #endif
