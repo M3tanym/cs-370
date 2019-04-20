@@ -33,7 +33,7 @@ testUDPJoystick: testUDPJoystick.cc UDPJoystick.cc Joystick.cc
 	make fixLib exName=$@
 	
 testDpad: testDpad.cc Dpad.cc 
-	$(CXX) -std=c++14 -Wall -g -I../include -l SDL2 testDpad.cc Dpad.cc -o $@
+	$(CXX) -std=c++14 -Wall -g -I../include -l SDL2 testDpad.cc Dpad.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
 
 fixLib:
