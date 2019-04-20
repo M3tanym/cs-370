@@ -52,30 +52,46 @@ void Joysticks::setSensitivity(const hsensitivity_t &hs)
 {
     config = hs;
 }
+
+//float Joysticks::getJoystickVal(char handLetter, char axis, double palmCoord) const
+//{
+//	double 
+//	if (axis == 'X' || axis == 'x')
+//}
  
 float Joysticks::getPalmCoord(char handLetter, char axis) const
 {
-    Vector handCenter;
+    Vector handPos;
     int intAxis;
-	double offset;
+	//double centerOffset;
 	int offsetIndex = 0;
+	double joystickVal;
     
     //determine what hand to look at
-    if		(handLetter == 'L' || handLetter == 'l')    handCenter = leftHand.palmPosition();
-	else if (handLetter == 'R' || handLetter == 'r'){	handCenter = rightHand.palmPosition(); offsetIndex += 2;}
+    if		(handLetter == 'L' || handLetter == 'l')    handPos = leftHand.palmPosition();
+	else if (handLetter == 'R' || handLetter == 'r'){	handPos = rightHand.palmPosition(); offsetIndex += 2;}
     else throw ("Error: could not determine hand from given hand letter: "s + handLetter);
     
     //determine what axis to access in the vector
     if      (axis == 'X' || axis == 'x')     intAxis = 0;
-	else if (axis == 'Y' || axis == 'y') {	 intAxis = 1; offsetIndex = -1; }
+	else if (axis == 'Y' || axis == 'y') {   intAxis = 1; return handPos[intAxis]; }
 	else if (axis == 'Z' || axis == 'z') {	 intAxis = 2; offsetIndex += 1; }
     else throw ("Error: could not determine axis from given letter: "s + axis);
     
-	if (offsetIndex < 0)
-		offset = 0;
-	else
-		offset = config.palmOffsets[offsetIndex];
 
-    return handCenter[intAxis] + offset;
+	//if (axis == 'X' || axis == 'x')
+	//{
+	//	if ((handLetter == 'R' || handLetter == 'r') && (handPos[intAxis] < 0)) // is the right hand x negative?
+	//		return 128.0;
+	//	if ((handLetter == 'L' || handLetter == 'l') && (handPos[intAxis] > 0)) // is the left hand x positive?
+	//		return 128.0;
+	//}
+
+	joystickVal = handPos[intAxis] - config.palmOffsets[offsetIndex];
+
+	if (joystickVal > 255) joystickVal = 255;
+	else if (joystickVal < 0) joystickVal = 0;
+
+    return joystickVal;
 }
 

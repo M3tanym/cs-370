@@ -37,6 +37,9 @@ class Joysticks
 
         // change sensitivity settings
         void setSensitivity(const hsensitivity_t &hs);
+
+		// returns a value between 0-255 that represents how far the joystick is from its center
+		//float getJoystickVal(char handLetter, char axis, double palmCoord) const;
                
         // returns the coordinate of the palm of the hand specified by handLetter and on the axis given
         float getPalmCoord(char handLetter, char axis) const;
