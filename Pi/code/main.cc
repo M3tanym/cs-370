@@ -177,8 +177,8 @@ int main(int argc, char **argv)
 		js.buttonBack = fButtons.isPressedDown(0);
 		js.buttonGuide = 0;
 		js.buttonStart = fButtons.isPressedDown(9);
-		js.buttonLeftStick = 0;
-		js.buttonRightStick = 0;
+		js.buttonLeftStick = fButtons.isPressedDown(1);
+		js.buttonRightStick = fButtons.isPressedDown(8);
 		js.buttonLeftBumper = fButtons.isPressedDown(2);
 		js.buttonRightBumper = fButtons.isPressedDown(7);
 		js.buttonDUp = 0;
@@ -187,10 +187,10 @@ int main(int argc, char **argv)
 		js.buttonDRight = 0;
 		js.leftStickX = joysticks.getPalmCoord('L', 'X');
 		js.leftStickY = joysticks.getPalmCoord('L', 'Z');
-		js.leftTrigger = joysticks.getPalmCoord('L', 'Y');
+		js.leftTrigger = 255 - joysticks.getPalmCoord('L', 'Y');
 		js.rightStickX = joysticks.getPalmCoord('R', 'X');
 		js.rightStickY = joysticks.getPalmCoord('R', 'Z');
-		js.rightTrigger = joysticks.getPalmCoord('R', 'Y');
+		js.rightTrigger = 255 - joysticks.getPalmCoord('R', 'Y');
 
 		udp.update(js);
 	}
