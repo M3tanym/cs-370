@@ -7,27 +7,11 @@
 #include <stdlib.h> // :( for system()
 
 #include "Leap.h"
-#include "FingerButtons.h"
+#include "Dpad.h"
 
 using namespace std;
 using namespace Leap;
-static FingerButtons fButtons;
-
-static char status[12] = "||||/ \\||||";
-
-void resetStatus() {
-    const char *cpy = "||||/ \\||||";
-    for (int i = 0; i < 12; i++) {
-        status[i] = cpy[i];
-    }
-}
-
-void changeStatus(int fingerId) {
-    if (fingerId >= 0 && fingerId < 5)
-        status[fingerId] = '.';
-    else if (fingerId >= 5 && fingerId < 10)
-        status[fingerId+1] = '.';
-}
+static Dpad dpad;
 
 class EventListener : public Listener {
   public:
@@ -63,14 +47,19 @@ void EventListener::onExit(const Controller& controller) {
 void EventListener::onFrame(const Controller& controller) {
     // Get the most recent frame and tell FingerButtons about it
     const Frame frame = controller.frame();
-    fButtons.updateFrame(frame);
+    dpad.updateFrame(frame);
 
     // call the appropriate handlers
-    resetStatus();
-    // this method will call appropriate event handlers. This isn't the only way to use this class:
-    // you could instead just call the individual .isPressedDown(id) methods
-    fButtons.checkButtonPresses();
-    cout << status << endl;
+    cout << "UP: " << boolalpha << dpad.up(Dpad::Hands::leftHand) << '\n';
+    cout << "DOWN: " << boolalpha << dpad.down(Dpad::Hands::leftHand)  << '\n';
+    cout << "LEFT: " << boolalpha << dpad.left(Dpad::Hands::leftHand)  << '\n';
+    cout << "RIGHT: " << boolalpha << dpad.right(Dpad::Hands::leftHand)  << '\n';
+    
+    cout << "UPRight: " << boolalpha << dpad.up(Dpad::Hands::rightHand)  << '\n';
+    cout << "DOWNRight: " << boolalpha << dpad.down(Dpad::Hands::rightHand)  << '\n';
+    cout << "LEFTRight: " << boolalpha << dpad.left(Dpad::Hands::rightHand)  << '\n';
+    cout << "RIGHTRight: " << boolalpha << dpad.right(Dpad::Hands::rightHand)  << '\n';
+    //cout << status << endl;
 }
 
 void EventListener::onFocusGained(const Controller& controller) {
@@ -101,17 +90,6 @@ void EventListener::onServiceDisconnect(const Controller& controller) {
 
 int main(int argc, const char* argv[])
 {
-
-  // initialize fButtons
-  fButtons.setAllCallbacks(changeStatus);
-
-  // set all sensitivies to 0.325
-  fsensitivity_t s;
-  for (int i = 0; i < 10; i++) {
-      s.fingerSensitivities[i] = 0.325;
-  }
-  fButtons.setSensitivity(s);
-
   // Create a sample listener and controller
   EventListener listener;
   Controller controller;
