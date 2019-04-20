@@ -96,8 +96,8 @@ bool Dpad::right(Hands h) const {
 }
 
 //return which Hand to use for dpad
-Hand Dpad::whichHand(Hands h) const{
-     Hand hand;
+Hand &Dpad::whichHand(Hands h) const{
+     Hand &hand;
      if(h==0)
           hand = leftHand;
      else
