@@ -148,15 +148,15 @@ int main(int argc, char **argv)
 	}
 	fButtons.setSensitivity(s);
 	
-	hsensitivity_t s;
-	s.joystickDeadzone = 30;
-	s.handDepthSensitivity = 300;
-	s.rangeOfMotionScalingFactor = 1;
-	s.palmOffsets[0] = -300;  //      0 : left hand x offset
-	s.palmOffsets[1] = -128;  //      1 : left hand z offset
-	s.palmOffsets[2] = 0;  //      2 : right hand x offset
-	s.palmOffsets[3] = -128;  //      3 : right hand z offset
-	joysticks.setSensitivity(s);
+	hsensitivity_t js;
+	js.joystickDeadzone = 30;
+	js.handDepthSensitivity = 300;
+	js.rangeOfMotionScalingFactor = 1;
+	js.palmOffsets[0] = -300;  //      0 : left hand x offset
+	js.palmOffsets[1] = -128;  //      1 : left hand z offset
+	js.palmOffsets[2] = 0;  //      2 : right hand x offset
+	js.palmOffsets[3] = -128;  //      3 : right hand z offset
+	joysticks.setSensitivity(js);
 
   // Connect to the dongle
 	cout << "[System] Setup complete! Waiting for dongle...\n";
