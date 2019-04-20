@@ -50,15 +50,15 @@ void EventListener::onFrame(const Controller& controller) {
     dpad.updateFrame(frame);
 
     // call the appropriate handlers
-    cout << "UP: " << boolalpha << dpad.up(Dpad::Hands::leftHand);
-    cout << "DOWN: " << boolalpha << dpad.down(Dpad::Hands::leftHand);
-    cout << "LEFT: " << boolalpha << dpad.left(Dpad::Hands::leftHand);
-    cout << "RIGHT: " << boolalpha << dpad.right(Dpad::Hands::leftHand);
+    cout << "UP: " << boolalpha << dpad.up(Dpad::Hands::leftHand) << '\n';
+    cout << "DOWN: " << boolalpha << dpad.down(Dpad::Hands::leftHand)  << '\n';
+    cout << "LEFT: " << boolalpha << dpad.left(Dpad::Hands::leftHand)  << '\n';
+    cout << "RIGHT: " << boolalpha << dpad.right(Dpad::Hands::leftHand)  << '\n';
     
-    cout << "UPRight: " << boolalpha << dpad.up(Dpad::Hands::rightHand);
-    cout << "DOWNRight: " << boolalpha << dpad.down(Dpad::Hands::rightHand);
-    cout << "LEFTRight: " << boolalpha << dpad.left(Dpad::Hands::rightHand);
-    cout << "RIGHTRight: " << boolalpha << dpad.right(Dpad::Hands::rightHand);
+    cout << "UPRight: " << boolalpha << dpad.up(Dpad::Hands::rightHand)  << '\n';
+    cout << "DOWNRight: " << boolalpha << dpad.down(Dpad::Hands::rightHand)  << '\n';
+    cout << "LEFTRight: " << boolalpha << dpad.left(Dpad::Hands::rightHand)  << '\n';
+    cout << "RIGHTRight: " << boolalpha << dpad.right(Dpad::Hands::rightHand)  << '\n';
     //cout << status << endl;
 }
 
