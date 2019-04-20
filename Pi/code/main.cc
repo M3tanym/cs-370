@@ -153,10 +153,10 @@ int main(int argc, char **argv)
 	jsens.handDepthSensitivity = 300;
 	jsens.rangeOfMotionScalingFactor = 1;
 	jsens.palmOffsets[0] = -300;  //      0 : left hand x offset
-	jsens.palmOffsets[1] = 0;  //      1 : left hand y offset
+	jsens.palmOffsets[1] = 100;  //      1 : left hand y offset
 	jsens.palmOffsets[2] = -128;  //      2 : left hand z offset
 	jsens.palmOffsets[3] = 0;  //      3 : right hand x offset
-	jsens.palmOffsets[4] = 0;  //      4 : right hand y offset
+	jsens.palmOffsets[4] = 100;  //      4 : right hand y offset
 	jsens.palmOffsets[5] = -128; //      5 : right hand z offset
 	joysticks.setSensitivity(jsens);
 
