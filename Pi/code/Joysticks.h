@@ -19,7 +19,10 @@ typedef struct handConfig_s {
     //      1 : left hand z offset
     //      2 : right hand x offset
     //      3 : right hand z offset
-    double palmOffsets[4];
+	//      4 : right hand x offset
+	//      5 : right hand z offset
+    double palmOffsets[6];
+
 
 } hsensitivity_t;
 
