@@ -7,8 +7,8 @@ using namespace Leap;
 //update frame method--update hand tilt position--code for this method straight from the D Hallstrom
 void Dpad::updateFrame(const Leap::Frame &frame) {
      // remove past hands so if a hand was moved out of the frame, we don't consider it (0 is left, 1 is right)
-    leftHand = Hand::invalid();
-    rightHand = Hand::invalid();
+    left = Hand::invalid();
+    right = Hand::invalid();
     
     // look through hands and set the appropriate variables.
     // if there are multiple left hands, for example, which one
@@ -16,10 +16,10 @@ void Dpad::updateFrame(const Leap::Frame &frame) {
     for (const Hand &h: frame.hands()) {
         if (h.isValid()) {
             if (h.isLeft()) {
-                leftHand = h;
+                left = h;
             }
             else if (h.isRight()) {
-                rightHand = h;
+                right = h;
             }
         }
     }           
@@ -96,7 +96,7 @@ bool Dpad::right(Hands h) const {
 }
 
 //return which Hand to use for dpad
-Hand Dpad::whichHand(Hands h){
+Hand Dpad::whichHand(Hands h) const{
      Hand hand;
      if(h==0)
           hand = leftHand;
