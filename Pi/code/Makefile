@@ -16,8 +16,8 @@ CXX=/usr/bin/g++
 
 
 
-main: main.cc UDPJoystick.cc FingerButtons.cc
-	$(CXX) -std=c++14 -Wall -g -I../include main.cc UDPJoystick.cc FingerButtons.cc -o $@ $(LEAP_LIBRARY)
+main: main.cc UDPJoystick.cc FingerButtons.cc Joysticks.cc
+	$(CXX) -std=c++14 -Wall -g -I../include main.cc UDPJoystick.cc FingerButtons.cc Joysticks.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
 
 testGesture: testGesture.cc HandSignal.cc HandSignalCollection.cc
@@ -26,6 +26,10 @@ testGesture: testGesture.cc HandSignal.cc HandSignalCollection.cc
 
 testFButtons: testFButtons.cc FingerButtons.cc
 	$(CXX) -std=c++14 -Wall -g -I../include testFButtons.cc FingerButtons.cc -o $@ $(LEAP_LIBRARY)
+	make fixLib exName=$@
+ 
+testJoysticks: testJoysticks.cc Joysticks.cc
+	$(CXX) -std=c++14 -Wall -g -I../include testJoysticks.cc Joysticks.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
 
 testUDPJoystick: testUDPJoystick.cc UDPJoystick.cc Joystick.cc
