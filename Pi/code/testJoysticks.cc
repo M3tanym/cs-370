@@ -97,11 +97,12 @@ int main(int argc, const char* argv[])
 	// set all sensitivies to 0.25
 	hsensitivity_t s;
 	s.joystickDeadzone = 30;
-	s.handDepthSensitivity = 80;
-	s.palmOffsets[0] = 0;  //      0 : left hand x offset
+	s.handDepthSensitivity = 300;
+	s.rangeOfMotionScalingFactor = 1;
+	s.palmOffsets[0] = 300;  //      0 : left hand x offset
 	s.palmOffsets[1] = 0;  //      1 : left hand z offset
-	s.palmOffsets[2] = 0;//      2 : right hand x offset
-	s.palmOffsets[3] = 0;//      3 : right hand z offset
+	s.palmOffsets[2] = 600;  //      2 : right hand x offset
+	s.palmOffsets[3] = 0;  //      3 : right hand z offset
 	joysticks.setSensitivity(s);
 
 	// Create a sample listener and controller
