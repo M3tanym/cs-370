@@ -25,7 +25,7 @@ class Dpad {
         //returns true if d-pad pressed right
         bool right(Hands h) const;
     private:
-        Leap::Hand whichHand(Hands h) const;
+        Leap::Hand &whichHand(Hands h) const;
         Leap::Hand leftH, rightH;
         
 };
