@@ -52,8 +52,7 @@ void Joysticks::setSensitivity(const hsensitivity_t &hs)
 {
     config = hs;
 }
-
-//returns the palm position corresponding to the axis specified 
+ 
 float Joysticks::getPalmCoord(char handLetter, char axis) const
 {
     Vector handCenter;
