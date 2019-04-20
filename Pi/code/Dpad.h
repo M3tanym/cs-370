@@ -12,7 +12,7 @@ class Dpad {
     
         // call each time you receive a new frame
         void updateFrame(const Leap::Frame &frame);   
-
+    
         //returns true if d-pad pressed up
         bool up(Hands h) const;
         
@@ -24,6 +24,9 @@ class Dpad {
         
         //returns true if d-pad pressed right
         bool right(Hands h) const;
+    private:
+        Leap::Hand Dpad::whichHand(Hands h)
+        Leap::Hand leftHand, rightHand;
         
 };
 #endif
