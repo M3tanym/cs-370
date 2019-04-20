@@ -67,11 +67,14 @@ float Joysticks::getPalmCoord(char handLetter, char axis) const
     
     //determine what axis to access in the vector
     if      (axis == 'X' || axis == 'x')     intAxis = 0;
-    else if (axis == 'Y' || axis == 'y')     intAxis = 1;
-	else if (axis == 'Z' || axis == 'z') {	 intAxis = 2; offsetIndex += 1;}
+	else if (axis == 'Y' || axis == 'y') {	 intAxis = 1; offsetIndex = -1; }
+	else if (axis == 'Z' || axis == 'z') {	 intAxis = 2; offsetIndex += 1; }
     else throw ("Error: could not determine axis from given letter: "s + axis);
     
-	offset = config.palmOffsets[offsetIndex];
+	if (offsetIndex < 0)
+		offset = 0;
+	else
+		offset = config.palmOffsets[offsetIndex];
 
     return handCenter[intAxis] + offset;
 }
