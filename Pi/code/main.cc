@@ -11,6 +11,8 @@
 #include "UDPJoystick.h"
 #include "Leap.h"
 #include "FingerButtons.h"
+#include "Joysticks.h"
+
 
 using namespace std;
 using namespace Leap;
@@ -23,6 +25,8 @@ constexpr int PACKETDELAY = 30; // Empirically obtained optimal delay time (ms)
 static bool running = true; // running flag
 static FingerButtons fButtons;
 static char fingerState[12] = "||||/ \\||||";
+static Joysticks joysticks;
+
 
 /******************** VARIOUS FUNCTIONS ********************/
 
@@ -83,6 +87,7 @@ void EventListener::onFrame(const Controller& controller) {
 	// Get the most recent frame and tell FingerButtons about it
 	const Frame frame = controller.frame();
 	fButtons.updateFrame(frame);
+	joysticks.updateFrame(frame);
 
 	// call the appropriate handlers
 	resetStatus();
@@ -142,6 +147,16 @@ int main(int argc, char **argv)
 		s.fingerSensitivities[i] = 0.4;
 	}
 	fButtons.setSensitivity(s);
+	
+	hsensitivity_t s;
+	s.joystickDeadzone = 30;
+	s.handDepthSensitivity = 300;
+	s.rangeOfMotionScalingFactor = 1;
+	s.palmOffsets[0] = -300;  //      0 : left hand x offset
+	s.palmOffsets[1] = -128;  //      1 : left hand z offset
+	s.palmOffsets[2] = 0;  //      2 : right hand x offset
+	s.palmOffsets[3] = -128;  //      3 : right hand z offset
+	joysticks.setSensitivity(s);
 
   // Connect to the dongle
 	cout << "[System] Setup complete! Waiting for dongle...\n";
@@ -160,19 +175,19 @@ int main(int argc, char **argv)
 		js.buttonBack = 0;
 		js.buttonGuide = 0;
 		js.buttonStart = 0;
-		js.buttonLeftStick = !(fingerState[4] == '/');
-		js.buttonRightStick = !(fingerState[6] == '\\');
+		js.buttonLeftStick = joysticks.isPressedDown('L');
+		js.buttonRightStick = joysticks.isPressedDown('R');
 		js.buttonLeftBumper = 0;
 		js.buttonRightBumper = 0;
 		js.buttonDUp = 0;
 		js.buttonDDown = 0;
 		js.buttonDLeft = 0;
 		js.buttonDRight = 0;
-		js.leftStickX = 0;
-		js.leftStickY = 0;
+		js.leftStickX = joysticks.getPalmCoord('L', 'X');
+		js.leftStickY = joysticks.getPalmCoord('L', 'Y');
 		js.leftTrigger = 0;
-		js.rightStickX = 0;
-		js.rightStickY = 0;
+		js.rightStickX = joysticks.getPalmCoord('R', 'X');
+		js.rightStickY = joysticks.getPalmCoord('R', 'Y');
 		js.rightTrigger = 0;
 
 		udp.update(js);
