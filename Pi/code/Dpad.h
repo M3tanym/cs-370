@@ -6,23 +6,24 @@
 
 class Dpad {
     public:
+    
+        //type Hands
+        enum Hands{leftHand = 0, rightHand = 1};
+    
         // call each time you receive a new frame
         void updateFrame(const Leap::Frame &frame);   
 
         //returns true if d-pad pressed up
-        bool up(const Hand &hand) const;
+        bool up(Hands h) const;
         
         //returns true if d-pad pressed down
-        bool down(const Hand &hand) const;
+        bool down(Hands h) const;
         
         //returns true if d-pad pressed left
-        bool left(const Hand &hand) const;
+        bool left(Hands h) const;
         
         //returns true if d-pad pressed right
-        bool right(const Hand &hand) const;
-    
-    //private:  
-        enum hands{leftHand = 0, rightHand = 1};
+        bool right(Hands h) const;
         
 };
 #endif
