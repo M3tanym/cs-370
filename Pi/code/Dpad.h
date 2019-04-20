@@ -26,7 +26,7 @@ class Dpad {
         bool right(Hands h) const;
     private:
         Leap::Hand whichHand(Hands h) const;
-        Leap::Hand left, right;
+        Leap::Hand leftH, rightH;
         
 };
 #endif
