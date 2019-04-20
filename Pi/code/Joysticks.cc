@@ -69,13 +69,13 @@ float Joysticks::getPalmCoord(char handLetter, char axis) const
     
     //determine what hand to look at
     if		(handLetter == 'L' || handLetter == 'l')    handPos = leftHand.palmPosition();
-	else if (handLetter == 'R' || handLetter == 'r'){	handPos = rightHand.palmPosition(); offsetIndex += 2;}
+	else if (handLetter == 'R' || handLetter == 'r'){	handPos = rightHand.palmPosition(); offsetIndex += 3;}
     else throw ("Error: could not determine hand from given hand letter: "s + handLetter);
     
     //determine what axis to access in the vector
-    if      (axis == 'X' || axis == 'x')     intAxis = 0;
-   	else if (axis == 'Y' || axis == 'y')     intAxis = 1; 
-	  else if (axis == 'Z' || axis == 'z') {	 intAxis = 2; offsetIndex += 1; }
+    if      (axis == 'X' || axis == 'x')		intAxis = 0;
+	else if (axis == 'Y' || axis == 'y') {		intAxis = 1; offsetIndex += 1; }
+	  else if (axis == 'Z' || axis == 'z') {	intAxis = 2; offsetIndex += 2; }
     else throw ("Error: could not determine axis from given letter: "s + axis);
     
 
@@ -91,7 +91,7 @@ float Joysticks::getPalmCoord(char handLetter, char axis) const
 		if (!leftHand.isValid())
 		{
 			if (axis == 'Y' || axis == 'y')
-				return 0;
+				return 255;
 			return 128.0;
 		}
 	}
@@ -99,7 +99,7 @@ float Joysticks::getPalmCoord(char handLetter, char axis) const
 		if (!rightHand.isValid())
 		{
 			if (axis == 'Y' || axis == 'y')
-				return 0;
+				return 255;
 			return 128.0;
 		}
 
@@ -107,6 +107,11 @@ float Joysticks::getPalmCoord(char handLetter, char axis) const
 	else {
 		return 128.0;
 	}
+
+	//if (offsetIndex < 0)
+	//	centerOffset = 0;
+	//else
+	//	centerOffset = config.palmOffsets[offsetIndex];
 
 	joystickVal = handPos[intAxis] - config.palmOffsets[offsetIndex];
 

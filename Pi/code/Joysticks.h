@@ -16,10 +16,10 @@ typedef struct handConfig_s {
     // array of values representing the amount, in mm, to offset the palm position of each hand
     // elements in the array are as follows:
     //      0 : left hand x offset
-    //      1 : left hand z offset
-    //      2 : right hand x offset
-    //      3 : right hand z offset
-	//      4 : right hand x offset
+    //      1 : left hand y offset
+    //      2 : left hand z offset
+    //      3 : right hand x offset
+	//      4 : right hand y offset
 	//      5 : right hand z offset
     double palmOffsets[6];
 
