@@ -156,6 +156,8 @@ int main(int argc, char **argv)
 	jsens.palmOffsets[1] = -128;  //      1 : left hand z offset
 	jsens.palmOffsets[2] = 0;  //      2 : right hand x offset
 	jsens.palmOffsets[3] = -128;  //      3 : right hand z offset
+	jsens.palmOffsets[4] = 0;
+	jsens.palmOffsets[5] = 0;
 	joysticks.setSensitivity(jsens);
 
   // Connect to the dongle
