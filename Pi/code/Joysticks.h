@@ -23,6 +23,7 @@ typedef struct handConfig_s {
 	//      5 : right hand z offset
     double palmOffsets[6];
 
+
 } hsensitivity_t;
 
 class Joysticks

@@ -35,6 +35,10 @@ testJoysticks: testJoysticks.cc Joysticks.cc
 testUDPJoystick: testUDPJoystick.cc UDPJoystick.cc Joystick.cc
 	$(CXX) -std=c++14 -Wall -g -I../include -l SDL2 testUDPJoystick.cc UDPJoystick.cc Joystick.cc -o $@
 	make fixLib exName=$@
+	
+testDpad: testDpad.cc Dpad.cc 
+	$(CXX) -std=c++14 -Wall -g -I../include -l SDL2 testDpad.cc Dpad.cc -o $@ $(LEAP_LIBRARY)
+	make fixLib exName=$@
 
 fixLib:
 ifeq ($(OS), Darwin)
@@ -42,4 +46,4 @@ ifeq ($(OS), Darwin)
 endif
 
 clean:
-	rm -rf main testGesture testFButtons testUDPJoystick *.dSYM
+	rm -rf main testGesture testFButtons testUDPJoystick testDpad *.dSYM

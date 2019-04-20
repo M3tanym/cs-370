@@ -74,8 +74,8 @@ float Joysticks::getPalmCoord(char handLetter, char axis) const
     
     //determine what axis to access in the vector
     if      (axis == 'X' || axis == 'x')     intAxis = 0;
-	else if (axis == 'Y' || axis == 'y')     intAxis = 1; 
-	else if (axis == 'Z' || axis == 'z') {	 intAxis = 2; offsetIndex += 1; }
+   	else if (axis == 'Y' || axis == 'y')     intAxis = 1; 
+	  else if (axis == 'Z' || axis == 'z') {	 intAxis = 2; offsetIndex += 1; }
     else throw ("Error: could not determine axis from given letter: "s + axis);
     
 
@@ -102,6 +102,7 @@ float Joysticks::getPalmCoord(char handLetter, char axis) const
 				return 0;
 			return 128.0;
 		}
+
 	}
 	else {
 		return 128.0;

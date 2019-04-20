@@ -6,10 +6,13 @@
 #include <cstring>
 #include <unistd.h>
 #include <stdlib.h>
+#include <signal.h>
 
 #include "UDPJoystick.h"
 #include "Leap.h"
 #include "FingerButtons.h"
+#include "Joysticks.h"
+
 
 using namespace std;
 using namespace Leap;
@@ -22,6 +25,8 @@ constexpr int PACKETDELAY = 30; // Empirically obtained optimal delay time (ms)
 static bool running = true; // running flag
 static FingerButtons fButtons;
 static char fingerState[12] = "||||/ \\||||";
+static Joysticks joysticks;
+
 
 /******************** VARIOUS FUNCTIONS ********************/
 
@@ -82,6 +87,7 @@ void EventListener::onFrame(const Controller& controller) {
 	// Get the most recent frame and tell FingerButtons about it
 	const Frame frame = controller.frame();
 	fButtons.updateFrame(frame);
+	joysticks.updateFrame(frame);
 
 	// call the appropriate handlers
 	resetStatus();
@@ -141,6 +147,16 @@ int main(int argc, char **argv)
 		s.fingerSensitivities[i] = 0.4;
 	}
 	fButtons.setSensitivity(s);
+	
+	hsensitivity_t jsens;
+	jsens.joystickDeadzone = 30;
+	jsens.handDepthSensitivity = 300;
+	jsens.rangeOfMotionScalingFactor = 1;
+	jsens.palmOffsets[0] = -300;  //      0 : left hand x offset
+	jsens.palmOffsets[1] = -128;  //      1 : left hand z offset
+	jsens.palmOffsets[2] = 0;  //      2 : right hand x offset
+	jsens.palmOffsets[3] = -128;  //      3 : right hand z offset
+	joysticks.setSensitivity(jsens);
 
   // Connect to the dongle
 	cout << "[System] Setup complete! Waiting for dongle...\n";
@@ -152,27 +168,27 @@ int main(int argc, char **argv)
 	{
 		joystickState js;
 		// TODO Change these to real values
-		js.buttonA = !(fingerState[0] == '|');
-		js.buttonB = !(fingerState[1] == '|');
-		js.buttonX = !(fingerState[2] == '|');
-		js.buttonY = !(fingerState[3] == '|');
-		js.buttonBack = 0;
+		js.buttonA = fButtons.isPressedDown(5);
+		js.buttonB = fButtons.isPressedDown(4);
+		js.buttonX = fButtons.isPressedDown(6);
+		js.buttonY = fButtons.isPressedDown(3);
+		js.buttonBack = fButtons.isPressedDown(0);
 		js.buttonGuide = 0;
-		js.buttonStart = 0;
-		js.buttonLeftStick = !(fingerState[4] == '/');
-		js.buttonRightStick = !(fingerState[6] == '\\');
-		js.buttonLeftBumper = 0;
-		js.buttonRightBumper = 0;
+		js.buttonStart = fButtons.isPressedDown(9);
+		js.buttonLeftStick = 0;
+		js.buttonRightStick = 0;
+		js.buttonLeftBumper = fButtons.isPressedDown(2);
+		js.buttonRightBumper = fButtons.isPressedDown(7);
 		js.buttonDUp = 0;
 		js.buttonDDown = 0;
 		js.buttonDLeft = 0;
 		js.buttonDRight = 0;
-		js.leftStickX = 0;
-		js.leftStickY = 0;
-		js.leftTrigger = 0;
-		js.rightStickX = 0;
-		js.rightStickY = 0;
-		js.rightTrigger = 0;
+		js.leftStickX = joysticks.getPalmCoord('L', 'X');
+		js.leftStickY = joysticks.getPalmCoord('L', 'Z');
+		js.leftTrigger = joysticks.getPalmCoord('L', 'Y');
+		js.rightStickX = joysticks.getPalmCoord('R', 'X');
+		js.rightStickY = joysticks.getPalmCoord('R', 'Z');
+		js.rightTrigger = joysticks.getPalmCoord('R', 'Y');
 
 		udp.update(js);
 	}
