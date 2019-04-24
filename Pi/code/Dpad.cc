@@ -31,16 +31,9 @@ void Dpad::updateFrame(const Leap::Frame& frame) {
 bool Dpad::up(Hands h) const {
 	Hand hand = whichHand(h);
 	float pitch = hand.direction().pitch();
-
-	if (pitch >= 0 && pitch <= 180) {
-		return false;
-	}
-	else if (pitch < 0 && pitch >= -180) {
+	if (pitch <= -60 && pitch >= -180)
 		return true;
-	}
-	else {
-		return false;
-	}
+	return false;
 }
 
 //returns true if hand tilted "down" depending on pitch position (gets tilt around x axis)
@@ -48,16 +41,9 @@ bool Dpad::up(Hands h) const {
 bool Dpad::down(Hands h) const {
 	Hand hand = whichHand(h);
 	float pitch = hand.direction().pitch();
-
-	if (pitch >= 0 && pitch <= 180) {
+	if (pitch >= 60 && pitch <= 180)
 		return true;
-	}
-	else if (pitch < 0 && pitch >= -180) {
-		return false;
-	}
-	else {
-		return false;
-	}
+	return false;
 }
 
 //returns true if hand tilted "left" depending on roll position (gets tilt around z axis)
@@ -65,34 +51,20 @@ bool Dpad::down(Hands h) const {
 bool Dpad::left(Hands h) const {
 	Hand hand = whichHand(h);
 	float roll = hand.palmNormal().roll();
-
-	if (roll >= 0 && roll <= 180) {
-		return false;
-	}
-	else if (roll < 0 && roll >= -180) {
+	if (roll <= -60 && roll >= -180)
 		return true;
-	}
-	else {
-		return false;
-	}
+	return false;
 }
 
 
 //returns true if hand tilted "right" depending on roll position (gets tilt around z axis)
-//roll returns positive value if in "left" direction (I think--need to test with leap to make sure)
+//roll returns positive value if in "right" direction (I think--need to test with leap to make sure)
 bool Dpad::right(Hands h) const {
 	Hand hand = whichHand(h);
 	float roll = hand.palmNormal().roll();
-
-	if (roll >= 0 && roll <= 180) {
+	if (roll >= 60 && roll <= 180)
 		return true;
-	}
-	else if (roll < 0 && roll >= -180) {
-		return false;
-	}
-	else {
-		return false;
-	}
+	return false;
 }
 
 //return which Hand to use for dpad
