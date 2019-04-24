@@ -31,7 +31,7 @@ void Dpad::updateFrame(const Leap::Frame& frame) {
 bool Dpad::up(Hands h) const {
 	Hand hand = whichHand(h);
 	float pitch = hand.direction().pitch();
-	if (pitch <= -60 && pitch >= -180)
+	if (pitch <= -1.0472 && pitch >= -3.14159)
 		return true;
 	return false;
 }
@@ -41,7 +41,7 @@ bool Dpad::up(Hands h) const {
 bool Dpad::down(Hands h) const {
 	Hand hand = whichHand(h);
 	float pitch = hand.direction().pitch();
-	if (pitch >= 60 && pitch <= 180)
+	if (pitch >= 1.0472 && pitch <= 3.14159)
 		return true;
 	return false;
 }
@@ -51,7 +51,7 @@ bool Dpad::down(Hands h) const {
 bool Dpad::left(Hands h) const {
 	Hand hand = whichHand(h);
 	float roll = hand.palmNormal().roll();
-	if (roll <= -60 && roll >= -180)
+	if (roll <= -1.0472 && roll >= -3.14159)
 		return true;
 	return false;
 }
@@ -62,7 +62,7 @@ bool Dpad::left(Hands h) const {
 bool Dpad::right(Hands h) const {
 	Hand hand = whichHand(h);
 	float roll = hand.palmNormal().roll();
-	if (roll >= 60 && roll <= 180)
+	if (roll >= 1.0472 && roll <= 3.14159)
 		return true;
 	return false;
 }
