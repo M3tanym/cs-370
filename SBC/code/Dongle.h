@@ -1,5 +1,5 @@
-#ifndef UDPJoystick_INCLUDED
-#define UDPJoystick_INCLUDED
+#ifndef Dongle_INCLUDED
+#define Dongle_INCLUDED
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -16,11 +16,11 @@ typedef struct JoystickState
 	unsigned char rightStickX, rightStickY, rightTrigger;
 } joystickState;
 
-class UDPJoystick
+class Dongle
 {
   public:
-    UDPJoystick(int port, size_t packetDelay);
-    ~UDPJoystick();
+    Dongle(int port, size_t packetDelay);
+    ~Dongle();
     bool waitForClient();
     void update(joystickState js);
     void sendData(const unsigned char *data, size_t length);

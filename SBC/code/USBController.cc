@@ -1,9 +1,9 @@
-#include "Joystick.h"
+#include "USBController.h"
 #include "SDL/SDL.h"
 #include <stdexcept>
 #include <thread>
 
-Joystick::Joystick(int desiredID): id(desiredID)
+USBController::USBController(int desiredID): id(desiredID)
 {
 	if(SDL_Init(SDL_INIT_JOYSTICK) < 0)
 		throw std::runtime_error("Couldn't initialize!");
@@ -15,23 +15,23 @@ Joystick::Joystick(int desiredID): id(desiredID)
 		throw std::runtime_error("Couldn't open controller!");
 
 	running = true;
-	t = std::thread(&Joystick::update, this);
+	t = std::thread(&USBController::update, this);
 }
 
-Joystick::~Joystick()
+USBController::~USBController()
 {
 	SDL_JoystickClose(gGameController);
 	gGameController = NULL;
 	SDL_Quit();
 }
 
-void Joystick::close()
+void USBController::close()
 {
 	running = false;
 	t.join();
 }
 
-void Joystick::update()
+void USBController::update()
 {
 	while(running)
 	{
