@@ -8,11 +8,11 @@
 #include <stdlib.h>
 #include <signal.h>
 
-#include "UDPJoystick.h"
 #include "Leap.h"
+#include "Dongle.h"
 #include "FingerButtons.h"
 #include "Joysticks.h"
-
+#include "Dpad.h"
 
 using namespace std;
 using namespace Leap;
@@ -136,7 +136,7 @@ int main(int argc, char **argv)
 	controller.addListener(listener);
 
 	// Open the UDP port
-	UDPJoystick udp(PORT, PACKETDELAY);
+	Dongle dongle(PORT, PACKETDELAY);
 
 	// Initialize fButtons
 	fButtons.setAllCallbacks(changeStatus);
@@ -147,7 +147,7 @@ int main(int argc, char **argv)
 		s.fingerSensitivities[i] = 0.4;
 	}
 	fButtons.setSensitivity(s);
-	
+
 	hsensitivity_t jsens;
 	jsens.joystickDeadzone = 30;
 	jsens.handDepthSensitivity = 300;
@@ -162,14 +162,13 @@ int main(int argc, char **argv)
 
   // Connect to the dongle
 	cout << "[System] Setup complete! Waiting for dongle...\n";
-	while(running && !udp.waitForClient()); // wait until client sends a packet
+	while(running && !dongle.waitForClient()); // wait until client sends a packet
 
-	if(running) cout << "[System] Dongle Identified! (" << udp.getClientIP() << ")\n";
+	if(running) cout << "[System] Dongle Identified! (" << dongle.getClientIP() << ")\n";
 
 	while(running) // Runs until ^C
 	{
 		joystickState js;
-		// TODO Change these to real values
 		js.buttonA = fButtons.isPressedDown(5);
 		js.buttonB = fButtons.isPressedDown(4);
 		js.buttonX = fButtons.isPressedDown(6);
@@ -192,7 +191,7 @@ int main(int argc, char **argv)
 		js.rightStickY = joysticks.getPalmCoord('R', 'Z');
 		js.rightTrigger = 255 - joysticks.getPalmCoord('R', 'Y');
 
-		udp.update(js);
+		dongle.update(js);
 	}
 
   // Remove the sample listener when done

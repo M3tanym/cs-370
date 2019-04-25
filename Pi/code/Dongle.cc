@@ -1,4 +1,4 @@
-#include "UDPJoystick.h"
+#include "Dongle.h"
 #include <stdexcept>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <string.h>
 
-UDPJoystick::UDPJoystick(int port, size_t packetDelay) : packetDelay(packetDelay)
+Dongle::Dongle(int port, size_t packetDelay) : packetDelay(packetDelay)
 {
 	if((fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
 		throw std::runtime_error("Couldn't create socket!");
@@ -26,19 +26,19 @@ UDPJoystick::UDPJoystick(int port, size_t packetDelay) : packetDelay(packetDelay
 		throw std::runtime_error("Couldn't bind!");
 }
 
-UDPJoystick::~UDPJoystick()
+Dongle::~Dongle()
 {
 	close(fd);
 }
 
-std::string UDPJoystick::getClientIP()
+std::string Dongle::getClientIP()
 {
 	char ip[INET6_ADDRSTRLEN];
   inet_ntop(AF_INET, &cliAddr.sin_addr, ip, INET6_ADDRSTRLEN);
 	return ip;
 }
 
-bool UDPJoystick::waitForClient()
+bool Dongle::waitForClient()
 {
 	char buf[1];
 	int recvLen = recvfrom(fd, buf, sizeof(buf), 0, (struct sockaddr *)&cliAddr, &addrLen);
@@ -47,7 +47,7 @@ bool UDPJoystick::waitForClient()
 	return false;
 }
 
-void UDPJoystick::update(joystickState js)
+void Dongle::update(joystickState js)
 {
 	// Put the button values into bytes
 	unsigned char by1 = 0, by2 = 0;
@@ -74,7 +74,7 @@ void UDPJoystick::update(joystickState js)
 	usleep(packetDelay * 1000); // sleep to avoid overwhelming the dongle
 }
 
-void UDPJoystick::sendData(const unsigned char *data, size_t length)
+void Dongle::sendData(const unsigned char *data, size_t length)
 {
 	sendto(fd, data, length, 0, (struct sockaddr *)&cliAddr, addrLen);
 }

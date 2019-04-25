@@ -16,28 +16,29 @@ CXX=/usr/bin/g++
 
 
 
-main: main.cc UDPJoystick.cc FingerButtons.cc Joysticks.cc
-	$(CXX) -std=c++14 -Wall -g -I../include main.cc UDPJoystick.cc FingerButtons.cc Joysticks.cc -o $@ $(LEAP_LIBRARY)
+main: main.cc Dongle.cc FingerButtons.cc Joysticks.cc Dpad.cc
+	$(CXX) -std=c++14 -Wall -g -I../include main.cc FingerButtons.cc Joysticks.cc Dongle.cc Dpad.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
 
-testGesture: testGesture.cc HandSignal.cc HandSignalCollection.cc
-	$(CXX) -std=c++14 -Wall -g -I../include testGesture.cc HandSignal.cc HandSignalCollection.cc -o $@ $(LEAP_LIBRARY)
+testDongle: testDongle.cc Dongle.cc USBController.cc
+	$(CXX) -std=c++14 -Wall -g -I../include -l SDL2 testDongle.cc Dongle.cc USBController.cc -o $@
 	make fixLib exName=$@
 
-testFButtons: testFButtons.cc FingerButtons.cc
-	$(CXX) -std=c++14 -Wall -g -I../include testFButtons.cc FingerButtons.cc -o $@ $(LEAP_LIBRARY)
+testFingerButtons: testFingerButtons.cc FingerButtons.cc
+	$(CXX) -std=c++14 -Wall -g -I../include testFingerButtons.cc FingerButtons.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
 
 testJoysticks: testJoysticks.cc Joysticks.cc
 	$(CXX) -std=c++14 -Wall -g -I../include testJoysticks.cc Joysticks.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
 
-testUDPJoystick: testUDPJoystick.cc UDPJoystick.cc USBController.cc
-	$(CXX) -std=c++14 -Wall -g -I../include -l SDL2 testUDPJoystick.cc UDPJoystick.cc USBController.cc -o $@
-	make fixLib exName=$@
-
 testDpad: testDpad.cc Dpad.cc
 	$(CXX) -std=c++14 -Wall -g -I../include -l SDL2 testDpad.cc Dpad.cc -o $@ $(LEAP_LIBRARY)
+	make fixLib exName=$@
+
+# unneeded, included for legacy
+testGesture: testGesture.cc HandSignal.cc HandSignalCollection.cc
+	$(CXX) -std=c++14 -Wall -g -I../include testGesture.cc HandSignal.cc HandSignalCollection.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
 
 fixLib:
@@ -46,4 +47,4 @@ ifeq ($(OS), Darwin)
 endif
 
 clean:
-	rm -rf main testGesture testFButtons testJoysticks testUDPJoystick testDpad *.dSYM
+	rm -rf main testGesture testFButtons testJoysticks testDongle testDpad *.dSYM

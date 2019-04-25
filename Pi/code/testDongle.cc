@@ -1,4 +1,4 @@
-#include "UDPJoystick.h"
+#include "Dongle.h"
 #include "USBController.h"
 #include <iostream>
 #include <string>
@@ -33,12 +33,12 @@ int main(int argc, char **argv)
 	USBController joy(controllerID);
 
 	cout << "Opening UDP Port " << PORT << "...\n";
-	UDPJoystick udp(PORT, packetDelay);
+	Dongle dongle(PORT, packetDelay);
 
 	cout << "Waiting for client...\n";
-	while(running && !udp.waitForClient()); // wait until client sends a packet
+	while(running && !dongle.waitForClient()); // wait until client sends a packet
 
-	if(running) cout << "Client Identified! (" << udp.getClientIP() << ")\nSending data in " << packetDelay << "ms intervals...\n";
+	if(running) cout << "Client Identified! (" << dongle.getClientIP() << ")\nSending data in " << packetDelay << "ms intervals...\n";
 
 	while(running) // Runs until ^C
 	{
@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 		js.rightStickX = joy.rightStickX;
 		js.rightStickY = joy.rightStickY;
 		js.rightTrigger = joy.rightRotation;
-		udp.update(js);
+		dongle.update(js);
 	}
 
 	joy.close();
