@@ -22,7 +22,7 @@ void setup()
   Serial.begin(BAUD);
   Serial.println("Starting...");
   WiFi.mode(WIFI_STA);
-  WiFi.begin("SSID", "Password");
+  WiFi.begin("LattePanda", "CS370LattePanda");
 
   connectWifi();
 
@@ -35,7 +35,7 @@ void loop()
 {
   if(millis() % 1000 == 0) // send a heartbeat packet every second
   {
-    IPAddress r(192, 168, 1, 8); // IP adress of the controller-computer
+    IPAddress r(192, 168, 42, 1); // IP adress of the controller-computer
     UDP.beginPacket(r, PORT);
     UDP.write('B'); // A random character to tell the controller that we're connected
     UDP.endPacket();
