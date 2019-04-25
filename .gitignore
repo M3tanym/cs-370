@@ -2,5 +2,7 @@
 Pi/code/main
 Pi/code/testGesture
 Pi/code/testFButtons
+Pi/code/testJoysticks
 Pi/code/testUDPJoystick
+Pi/code/testDpad
 Pi/code/*.dSYM/

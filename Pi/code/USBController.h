@@ -1,14 +1,14 @@
-#ifndef Joystick_DEFINED
-#define Joystick_DEFINED
+#ifndef USBController_DEFINED
+#define USBController_DEFINED
 
 #include "SDL/SDL.h"
 #include <thread>
 
-class Joystick
+class USBController
 {
 	public:
-		Joystick(int desiredID = 0);
-		~Joystick();
+		USBController(int desiredID = 0);
+		~USBController();
 		void close();
 		int leftStickX = 0, leftStickY = 0, leftRotation = 0;
 		int rightStickX = 0, rightStickY = 0, rightRotation = 0;

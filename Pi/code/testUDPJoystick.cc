@@ -1,5 +1,5 @@
 #include "UDPJoystick.h"
-#include "Joystick.h"
+#include "USBController.h"
 #include <iostream>
 #include <string>
 #include <unistd.h>
@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 	signal(SIGINT, catchIntr); // catch ^C with the catchIntr() function
 
 	cout << "Connecting to controller " << controllerID << "...\n";
-	Joystick joy(controllerID);
+	USBController joy(controllerID);
 
 	cout << "Opening UDP Port " << PORT << "...\n";
 	UDPJoystick udp(PORT, packetDelay);
