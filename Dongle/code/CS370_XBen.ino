@@ -13,16 +13,12 @@ void setup()
 
 void loop()
 {
-  // Wait for the serial header "!#(<"
+  // Wait for the serial header "!<"
   bool wait = true;
   while(wait)
   {
     while(Serial1.available() < 1);
     if(Serial1.read() != '!') continue;
-    while(Serial1.available() < 1);
-    if(Serial1.read() != '#') continue;
-    while(Serial1.available() < 1);
-    if(Serial1.read() != '(') continue;
     while(Serial1.available() < 1);
     if(Serial1.read() != '<') continue;
     wait = false;
