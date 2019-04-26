@@ -2,29 +2,37 @@
 
 using namespace Leap;
 
-//need to implement edge cases (non-adjacent pitch and roll)
-
-//update frame method--update hand tilt position--code for this method straight from the D Hallstrom
+//update frame method--update hand tilt position
 void Dpad::updateFrame(const Leap::Frame& frame) {
 	// remove past hands so if a hand was moved out of the frame, we don't consider it (0 is left, 1 is right)
 	leftH = Hand::invalid();
 	rightH = Hand::invalid();
 
-	// look through hands and set the appropriate variables.
-	// if there are multiple left hands, for example, which one
-	// is chosen is unspecified (hands() uses an arbitrary ordering)
+	//set hands
 	for (const Hand& h : frame.hands()) {
 		if (h.isValid()) {
-			if (h.isLeft()) {
+			if (h.isLeft())
 				leftH = h;
-			}
-			else if (h.isRight()) {
+			else if (h.isRight())
 				rightH = h;
-			}
 		}
 	}
 }
 
+//TODO: IMPLEMENT USING STRUCT
+// returns true if hand is considered "down" depending on the handSensitivitiesDpad_t settings
+bool isPressedDown(char hand) const{
+}
+
+//used outline from FingerButtons.cc
+bool Dpad::areHandsVisible() const{
+    return leftH.isValid() && rightH.isValid();
+}
+
+//sets configuration for hand directions
+void Dpad::setSensitivity(const handSensitiviesDpad_t &hs){
+    config = hs;
+}
 
 //returns true if hand tilted "up" depending on pitch position (gets tilted around x axis)
 //pitch returns negative value if in "up" direction (I think--need to test with leap to make sure)
