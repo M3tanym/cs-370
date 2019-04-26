@@ -1,16 +1,31 @@
 #ifndef DPAD_H_INCLUDED
 #define DPAD_H_INCLUDED
-
 #include "Leap.h"
+
+typedef struct handConfigDpad_s {
+	float pitchSens;
+	float rollSens;
+	//get XY or YZ positions of either left or right hand--xyz position
+    double handPositions[8];
+}handSensitivitiesDpad_t;
 
 class Dpad {
 public:
-
+	
 	//type Hands
 	enum Hands { leftHand, rightHand };
-
+		
 	// call each time you receive a new frame
 	void updateFrame(const Leap::Frame& frame);
+	
+	// returns true if both hands are in the latest frame
+        bool areHandsVisible() const;
+	
+	// returns true if hand is considered "down" depending on the handSensitivitiesDpad_t settings
+        bool isPressedDown(char hand) const;
+
+        // change sensitivity settings
+        void setSensitivity(const handSensitivitiesDpad_t &hs);
 
 	//returns true if d-pad pressed up
 	bool up(Hands h) const;
@@ -26,7 +41,7 @@ public:
 private:
 	const Leap::Hand& whichHand(Hands h) const;
 	Leap::Hand leftH, rightH;
+	handSensitiviesDpad_t config;
 
 };
 #endif
-#pragma once
