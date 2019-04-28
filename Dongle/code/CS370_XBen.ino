@@ -13,24 +13,22 @@ void setup()
 
 void loop()
 {
-  // Wait for the serial header "!#(<"
+  // Wait for the serial header "!<"
   bool wait = true;
   while(wait)
   {
     while(Serial1.available() < 1);
     if(Serial1.read() != '!') continue;
     while(Serial1.available() < 1);
-    if(Serial1.read() != '#') continue;
-    while(Serial1.available() < 1);
-    if(Serial1.read() != '(') continue;
-    while(Serial1.available() < 1);
     if(Serial1.read() != '<') continue;
     wait = false;
   }
 
   // At this point, we know this is a valid Serial frame
-  // Read the next 12 bytes
-  const int packetSize = 12;
+  // Read the bytes
+  const int dataSize = 8;
+  const int tailSize = 2;
+  const int packetSize = dataSize + tailSize;
   unsigned char b[packetSize];
   for(int i = 0; i < packetSize; i++)
   {

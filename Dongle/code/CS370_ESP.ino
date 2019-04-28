@@ -4,6 +4,9 @@
 
 #define PORT 2342
 #define BAUD 57600
+static const String network = "LattePanda";
+static const String password = "CS370LattePanda";
+static const IPAddress ip(192, 168, 42, 1); // IP adress of the controller-computer
 
 WiFiUDP UDP;
 WiFiClient client;
@@ -22,7 +25,7 @@ void setup()
   Serial.begin(BAUD);
   Serial.println("Starting...");
   WiFi.mode(WIFI_STA);
-  WiFi.begin("SSID", "Password");
+  WiFi.begin(network, password);
 
   connectWifi();
 
@@ -35,8 +38,8 @@ void loop()
 {
   if(millis() % 1000 == 0) // send a heartbeat packet every second
   {
-    IPAddress r(192, 168, 1, 8); // IP adress of the controller-computer
-    UDP.beginPacket(r, PORT);
+    connectWifi();
+    UDP.beginPacket(ip, PORT);
     UDP.write('B'); // A random character to tell the controller that we're connected
     UDP.endPacket();
   }
@@ -48,9 +51,9 @@ void loop()
     unsigned char b[8];
     UDP.read(b, sizeof(b));
     
-    Serial.print("!#(<"); // Header
+    Serial.print("!<"); // Header
     for(int i = 0; i < 8; i++)
       Serial.write(b[i]); // write = a byte, print = a string
-    Serial.print(">)#!"); // Footer
+    Serial.print(">!"); // Footer
   }
 }

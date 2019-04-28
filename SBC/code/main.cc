@@ -8,9 +8,11 @@
 #include <stdlib.h>
 #include <signal.h>
 
-#include "UDPJoystick.h"
 #include "Leap.h"
+#include "Dongle.h"
 #include "FingerButtons.h"
+#include "Joysticks.h"
+#include "Dpad.h"
 
 using namespace std;
 using namespace Leap;
@@ -19,10 +21,12 @@ using namespace Leap;
 
 constexpr int DEBUG = 0; // Debug level flag (0: off, 1: few, 2: more, 3: all)
 constexpr int PORT = 2342; // Arbitarily chosen value (> 1024). Must also be set in ESP code
-constexpr int PACKETDELAY = 30; // Empirically obtained optimal delay time (ms)
+constexpr int PACKETDELAY = 15; // Empirically obtained optimal delay time (ms)
 static bool running = true; // running flag
 static FingerButtons fButtons;
 static char fingerState[12] = "||||/ \\||||";
+static Joysticks joysticks;
+
 
 /******************** VARIOUS FUNCTIONS ********************/
 
@@ -83,6 +87,7 @@ void EventListener::onFrame(const Controller& controller) {
 	// Get the most recent frame and tell FingerButtons about it
 	const Frame frame = controller.frame();
 	fButtons.updateFrame(frame);
+	joysticks.updateFrame(frame);
 
 	// call the appropriate handlers
 	resetStatus();
@@ -131,7 +136,7 @@ int main(int argc, char **argv)
 	controller.addListener(listener);
 
 	// Open the UDP port
-	UDPJoystick udp(PORT, PACKETDELAY);
+	Dongle dongle(PORT, PACKETDELAY);
 
 	// Initialize fButtons
 	fButtons.setAllCallbacks(changeStatus);
@@ -143,39 +148,50 @@ int main(int argc, char **argv)
 	}
 	fButtons.setSensitivity(s);
 
+	hsensitivity_t jsens;
+	jsens.joystickDeadzone = 30;
+	jsens.handDepthSensitivity = 300;
+	jsens.rangeOfMotionScalingFactor = 1;
+	jsens.palmOffsets[0] = -300;  //      0 : left hand x offset
+	jsens.palmOffsets[1] = 100;  //      1 : left hand y offset
+	jsens.palmOffsets[2] = -128;  //      2 : left hand z offset
+	jsens.palmOffsets[3] = 0;  //      3 : right hand x offset
+	jsens.palmOffsets[4] = 100;  //      4 : right hand y offset
+	jsens.palmOffsets[5] = -128; //      5 : right hand z offset
+	joysticks.setSensitivity(jsens);
+
   // Connect to the dongle
 	cout << "[System] Setup complete! Waiting for dongle...\n";
-	while(running && !udp.waitForClient()); // wait until client sends a packet
+	while(running && !dongle.waitForClient()); // wait until client sends a packet
 
-	if(running) cout << "[System] Dongle Identified! (" << udp.getClientIP() << ")\n";
+	if(running) cout << "[System] Dongle Identified! (" << dongle.getClientIP() << ")\n";
 
 	while(running) // Runs until ^C
 	{
 		joystickState js;
-		// TODO Change these to real values
-		js.buttonA = !(fingerState[0] == '|');
-		js.buttonB = !(fingerState[1] == '|');
-		js.buttonX = !(fingerState[2] == '|');
-		js.buttonY = !(fingerState[3] == '|');
-		js.buttonBack = 0;
+		js.buttonA = fButtons.isPressedDown(5);
+		js.buttonB = fButtons.isPressedDown(4);
+		js.buttonX = fButtons.isPressedDown(6);
+		js.buttonY = fButtons.isPressedDown(3);
+		js.buttonBack = fButtons.isPressedDown(0);
 		js.buttonGuide = 0;
-		js.buttonStart = 0;
-		js.buttonLeftStick = !(fingerState[4] == '/');
-		js.buttonRightStick = !(fingerState[6] == '\\');
-		js.buttonLeftBumper = 0;
-		js.buttonRightBumper = 0;
+		js.buttonStart = fButtons.isPressedDown(9);
+		js.buttonLeftStick = fButtons.isPressedDown(1);
+		js.buttonRightStick = fButtons.isPressedDown(8);
+		js.buttonLeftBumper = fButtons.isPressedDown(2);
+		js.buttonRightBumper = fButtons.isPressedDown(7);
 		js.buttonDUp = 0;
 		js.buttonDDown = 0;
 		js.buttonDLeft = 0;
 		js.buttonDRight = 0;
-		js.leftStickX = 0;
-		js.leftStickY = 0;
-		js.leftTrigger = 0;
-		js.rightStickX = 0;
-		js.rightStickY = 0;
-		js.rightTrigger = 0;
+		js.leftStickX = joysticks.getPalmCoord('L', 'X');
+		js.leftStickY = joysticks.getPalmCoord('L', 'Z');
+		js.leftTrigger = 255 - joysticks.getPalmCoord('L', 'Y');
+		js.rightStickX = joysticks.getPalmCoord('R', 'X');
+		js.rightStickY = joysticks.getPalmCoord('R', 'Z');
+		js.rightTrigger = 255 - joysticks.getPalmCoord('R', 'Y');
 
-		udp.update(js);
+		dongle.update(js);
 	}
 
   // Remove the sample listener when done
