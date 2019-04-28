@@ -33,6 +33,33 @@ void Dpad::updateFrame(const Leap::Frame& frame) {
         return false;
 }*/
 
+//determines if hand is pressed down in the direction
+bool Dpad::isPressedDown(Hand h, char axis) const{
+	//left hand starts at 0, right hand starts at 4
+	int index = 0;
+	float position = 0;
+	Hand hand = whichHand(h);
+	if(hand==leftH){
+        	if(!leftH.isValid()) 
+			return false;
+		else
+			index +=4;
+	}
+    	else if(hand==rightH) {
+        	if(!rightH.isValid()) 
+			return false;
+		else
+			index +=4;
+	}
+	if(axis == 'x' || axis =='X')
+	   position = 0;
+	if(axis == 'y' || axis =='Y')
+	   position = 1;
+	if(axis == 'z' || axis =='Z')
+	   position = 2;
+	//config.handPositions[index]
+	double current position
+}
 //used outline from FingerButtons.cc
 bool Dpad::areHandsVisible() const{
     return leftH.isValid() && rightH.isValid();
