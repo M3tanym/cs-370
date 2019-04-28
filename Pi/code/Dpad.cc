@@ -19,10 +19,19 @@ void Dpad::updateFrame(const Leap::Frame& frame) {
 	}
 }
 
-//TODO: IMPLEMENT USING STRUCT
-// returns true if hand is considered "down" depending on the handSensitivitiesDpad_t settings
-bool isPressedDown(char hand) const{
-}
+// returns true if hand is considered "down"
+/*bool isPressedDown(Hands h) const{
+	Hand hand = whichHand(h);
+	if(hand==leftH){
+        	if(!leftH.isValid()) 
+			return false;
+	}
+    	else if(hand==rightH) {
+        	if(!rightH.isValid()) 
+			return false;
+	}
+        return false;
+}*/
 
 //used outline from FingerButtons.cc
 bool Dpad::areHandsVisible() const{
