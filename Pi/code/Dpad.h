@@ -3,9 +3,7 @@
 #include "Leap.h"
 
 typedef struct handConfigDpad_s {
-	float pitchSens;
-	float rollSens;
-	//get XY or YZ positions of either left or right hand--xyz position
+	//for each hand, there are four possible positions (positive and negative pitch, positive and negative roll for each)
     double handPositions[8];
 }handSensitivitiesDpad_t;
 
@@ -22,7 +20,7 @@ public:
         bool areHandsVisible() const;
 	
 	// returns true if hand is considered "down" depending on the handSensitivitiesDpad_t settings
-        bool isPressedDown(char hand) const;
+        //bool isPressedDown(Hands h) const;
 
         // change sensitivity settings
         void setSensitivity(const handSensitivitiesDpad_t &hs);
