@@ -20,7 +20,7 @@ public:
         bool areHandsVisible() const;
 	
 	// returns true if hand is considered "down" depending on the handSensitivitiesDpad_t settings
-        //bool isPressedDown(Hands h) const;
+        bool isPressedDown(Hands h, char axis) const;
 
         // change sensitivity settings
         void setSensitivity(const handSensitivitiesDpad_t &hs);
