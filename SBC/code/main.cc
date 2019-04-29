@@ -164,7 +164,7 @@ int main(int argc, char **argv)
 	dpadsens_t d;
 
 	//pitchMin/Max = 60 degrees/180 degrees in radians (Y-Z plane)
-	d.pitchMin = 0.30;  
+	d.pitchMin = 0.45;  
 	d.pitchMax = 3.14; 
 	//rollMin/Max = 60 degrees/180 degrees in radians (X-Y plane) 
 	d.rollMin = 0.3; 
@@ -206,7 +206,7 @@ int main(int argc, char **argv)
 		dongle.update(js);
 	}
 
-  // Remove the sample listener when done
-  controller.removeListener(listener);
+  	// Remove the sample listener when done
+  	controller.removeListener(listener);
 	return 0;
 }
