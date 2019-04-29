@@ -23,10 +23,12 @@ constexpr int DEBUG = 0; // Debug level flag (0: off, 1: few, 2: more, 3: all)
 constexpr int PORT = 2342; // Arbitarily chosen value (> 1024). Must also be set in ESP code
 constexpr int PACKETDELAY = 15; // Empirically obtained optimal delay time (ms)
 static bool running = true; // running flag
-static FingerButtons fButtons;
-static char fingerState[12] = "||||/ \\||||";
-static Joysticks joysticks;
 
+static FingerButtons fButtons;
+static Joysticks joysticks;
+static Dpad dpad;
+
+static char fingerState[12] = "||||/ \\||||";
 
 /******************** VARIOUS FUNCTIONS ********************/
 
