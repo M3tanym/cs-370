@@ -59,7 +59,7 @@ bool Dpad::left(Hands h) const {
 	if (!hand.isValid())
 		return false;
 	float roll = hand.palmNormal().roll();
-	if (roll <= (-config.rollMin) && roll >= (-config.rollMax))
+	if (roll >= config.rollMin && roll <= config.rollMax)
 		return true;
 	return false;
 }
@@ -72,7 +72,7 @@ bool Dpad::right(Hands h) const {
 	if (!hand.isValid())
 		return false;
 	float roll = hand.palmNormal().roll();
-	if (roll >= config.rollMin && roll <= config.rollMax)
+	if (roll <= (-config.rollMin) && roll >= (-config.rollMax))
 		return true;
 	return false;
 }

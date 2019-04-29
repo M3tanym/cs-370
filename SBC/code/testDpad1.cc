@@ -93,11 +93,12 @@ int main(int argc, const char* argv[])
 	dpadsens_t d;
 
 	//pitchMin/Max = 60 degrees/180 degrees in radians (Y-Z plane)
-	d.pitchMin = 1.0472;  
-	d.pitchMax = 3.14159; 
+	d.pitchMin = 0.30;  
+	d.pitchMax = 3.14; 
 	//rollMin/Max = 60 degrees/180 degrees in radians (X-Y plane) 
-	d.rollMin = 1.0472; 
-	d.rollMax = 3.14159;  
+	d.rollMin = 0.3; 
+	//1.0472
+	d.rollMax = 3.14;  
 	dpad.setSensitivity(d);
 
 	// Create a sample listener and controller
