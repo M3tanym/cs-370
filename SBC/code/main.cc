@@ -159,8 +159,20 @@ int main(int argc, char **argv)
 	jsens.palmOffsets[4] = 150;  //      4 : right hand y offset
 	jsens.palmOffsets[5] = -128; //      5 : right hand z offset
 	joysticks.setSensitivity(jsens);
+	
+	// Dpad sensitivities
+	dpadsens_t d;
 
-  // Connect to the dongle
+	//pitchMin/Max = 60 degrees/180 degrees in radians (Y-Z plane)
+	d.pitchMin = 0.30;  
+	d.pitchMax = 3.14; 
+	//rollMin/Max = 60 degrees/180 degrees in radians (X-Y plane) 
+	d.rollMin = 0.3; 
+	//1.0472
+	d.rollMax = 3.14;  
+	dpad.setSensitivity(d);
+
+  	// Connect to the dongle
 	cout << "[System] Setup complete! Waiting for dongle...\n";
 	while(running && !dongle.waitForClient()); // wait until client sends a packet
 
