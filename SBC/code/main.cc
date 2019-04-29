@@ -23,10 +23,12 @@ constexpr int DEBUG = 0; // Debug level flag (0: off, 1: few, 2: more, 3: all)
 constexpr int PORT = 2342; // Arbitarily chosen value (> 1024). Must also be set in ESP code
 constexpr int PACKETDELAY = 15; // Empirically obtained optimal delay time (ms)
 static bool running = true; // running flag
-static FingerButtons fButtons;
-static char fingerState[12] = "||||/ \\||||";
-static Joysticks joysticks;
 
+static FingerButtons fButtons;
+static Joysticks joysticks;
+static Dpad dpad;
+
+static char fingerState[12] = "||||/ \\||||";
 
 /******************** VARIOUS FUNCTIONS ********************/
 
@@ -88,6 +90,7 @@ void EventListener::onFrame(const Controller& controller) {
 	const Frame frame = controller.frame();
 	fButtons.updateFrame(frame);
 	joysticks.updateFrame(frame);
+	dpad.updateFrame(frame);
 
 	// call the appropriate handlers
 	resetStatus();
@@ -142,22 +145,34 @@ int main(int argc, char **argv)
 	fButtons.setAllCallbacks(changeStatus);
 
 	// Set all sensitivies
-	fsensitivity_t s{0.45, 0.5, 0.5, 0.5, 0.48, 0.38, 0.35, 0.5, 0.6, 0.5};
+	fsensitivity_t s{0.45, 0.5, 0.5, 0.5, 0.45, 0.38, 0.35, 0.5, 0.6, 0.5};
 	fButtons.setSensitivity(s);
 
 	hsensitivity_t jsens;
 	jsens.joystickDeadzone = 30;
 	jsens.handDepthSensitivity = 300;
-	jsens.joystickSensitivity = 1;
-	jsens.palmOffsets[0] = -300;  //      0 : left hand x offset
-	jsens.palmOffsets[1] = 100;  //      1 : left hand y offset
+	jsens.joystickSensitivity = 2;
+	jsens.palmOffsets[0] = -150;  //      0 : left hand x offset
+	jsens.palmOffsets[1] = 150;  //      1 : left hand y offset
 	jsens.palmOffsets[2] = -128;  //      2 : left hand z offset
-	jsens.palmOffsets[3] = 0;  //      3 : right hand x offset
-	jsens.palmOffsets[4] = 100;  //      4 : right hand y offset
+	jsens.palmOffsets[3] = 150;  //      3 : right hand x offset
+	jsens.palmOffsets[4] = 150;  //      4 : right hand y offset
 	jsens.palmOffsets[5] = -128; //      5 : right hand z offset
 	joysticks.setSensitivity(jsens);
+	
+	// Dpad sensitivities
+	dpadsens_t d;
 
-  // Connect to the dongle
+	//pitchMin/Max = 60 degrees/180 degrees in radians (Y-Z plane)
+	d.pitchMin = 0.45;  
+	d.pitchMax = 3.14; 
+	//rollMin/Max = 60 degrees/180 degrees in radians (X-Y plane) 
+	d.rollMin = 0.3; 
+	//1.0472
+	d.rollMax = 3.14;  
+	dpad.setSensitivity(d);
+
+  	// Connect to the dongle
 	cout << "[System] Setup complete! Waiting for dongle...\n";
 	while(running && !dongle.waitForClient()); // wait until client sends a packet
 
@@ -177,10 +192,10 @@ int main(int argc, char **argv)
 		js.buttonRightStick = fButtons.isPressedDown(8);
 		js.buttonLeftBumper = fButtons.isPressedDown(2);
 		js.buttonRightBumper = fButtons.isPressedDown(7);
-		js.buttonDUp = 0;
-		js.buttonDDown = 0;
-		js.buttonDLeft = 0;
-		js.buttonDRight = 0;
+		js.buttonDUp = dpad.up(Dpad::Hands::leftHand);
+		js.buttonDDown = dpad.down(Dpad::Hands::leftHand);
+		js.buttonDLeft = dpad.left(Dpad::Hands::leftHand);
+		js.buttonDRight = dpad.right(Dpad::Hands::leftHand);
 		js.leftStickX = joysticks.getPalmCoord('L', 'X');
 		js.leftStickY = joysticks.getPalmCoord('L', 'Z');
 		js.leftTrigger = 255 - joysticks.getPalmCoord('L', 'Y');
@@ -191,7 +206,7 @@ int main(int argc, char **argv)
 		dongle.update(js);
 	}
 
-  // Remove the sample listener when done
-  controller.removeListener(listener);
+  	// Remove the sample listener when done
+  	controller.removeListener(listener);
 	return 0;
 }
