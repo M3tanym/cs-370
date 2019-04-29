@@ -148,7 +148,7 @@ int main(int argc, char **argv)
 	hsensitivity_t jsens;
 	jsens.joystickDeadzone = 30;
 	jsens.handDepthSensitivity = 300;
-	jsens.joystickSensitivity = 1;
+	jsens.joystickSensitivity = 2;
 	jsens.palmOffsets[0] = -300;  //      0 : left hand x offset
 	jsens.palmOffsets[1] = 100;  //      1 : left hand y offset
 	jsens.palmOffsets[2] = -128;  //      2 : left hand z offset
