@@ -27,6 +27,10 @@ testDongle: testDongle.cc Dongle.cc USBController.cc
 testFingerButtons: testFingerButtons.cc FingerButtons.cc
 	$(CXX) -std=c++14 -Wall -g -I../include testFingerButtons.cc FingerButtons.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
+    
+adjustFingerButtons: adjustFingerButtons.cc FingerButtons.cc
+	$(CXX) -std=c++14 -Wall -g -I../include adjustFingerButtons.cc FingerButtons.cc -o $@ $(LEAP_LIBRARY)
+	make fixLib exName=$@
 
 testJoysticks: testJoysticks.cc Joysticks.cc
 	$(CXX) -std=c++14 -Wall -g -I../include testJoysticks.cc Joysticks.cc -o $@ $(LEAP_LIBRARY)

@@ -54,11 +54,16 @@ Finger::Type getFingerType(int id) {
 
 // returns true if finger fingerId is considered "down" depending on the fsensitivity settings
 bool FingerButtons::isPressedDown(int fingerId) const {
+    return getPressedDown(fingerId) >= config.fingerSensitivities[fingerId];
+}
+    
+double FingerButtons::getPressedDown(int fingerId) const {
+
     Vector norm;
     Finger finger;
     
     if (fingerId >= 0 && fingerId < 5) {
-        if (!leftHand.isValid()) return false;
+        if (!leftHand.isValid()) return 0;
         
         norm = leftHand.palmNormal().normalized();
         
@@ -66,12 +71,12 @@ bool FingerButtons::isPressedDown(int fingerId) const {
         FingerList fl = leftHand.fingers().fingerType(getFingerType(fingerId));
         
         // can it see it?
-        if (fl.count() == 0) return false;
+        if (fl.count() == 0) return 0;
         
         finger = fl[0];
     }
     else if (fingerId >= 5 && fingerId < 10) {
-        if (!rightHand.isValid()) return false;
+        if (!rightHand.isValid()) return 0;
         
         norm = rightHand.palmNormal().normalized();
         
@@ -79,16 +84,16 @@ bool FingerButtons::isPressedDown(int fingerId) const {
         FingerList fl = rightHand.fingers().fingerType(getFingerType(fingerId));
         
         // can it see it?
-        if (fl.count() == 0) return false;
+        if (fl.count() == 0) return 0;
         
         finger = fl[0];
     }
     else {
-        return false;
+        return 0;
     }
     
     
-    if (!finger.isValid()) return false;
+    if (!finger.isValid()) return 0;
     
     // get positions of the start and end of the finger
     Vector start = finger.bone(Bone::Type::TYPE_METACARPAL).prevJoint();
@@ -103,7 +108,7 @@ bool FingerButtons::isPressedDown(int fingerId) const {
     double mag = fingerVec.dot(norm) / fingerVec.magnitude();
     
     // if this value is greater than the required sensitivity, the finger is down
-    return mag >= config.fingerSensitivities[fingerId];
+    return mag;
 }
 
 

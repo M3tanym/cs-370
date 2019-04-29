@@ -12,22 +12,7 @@
 using namespace std;
 using namespace Leap;
 static FingerButtons fButtons;
-
-static char status[12] = "||||/ \\||||";
-
-void resetStatus() {
-    const char *cpy = "||||/ \\||||";
-    for (int i = 0; i < 12; i++) {
-        status[i] = cpy[i];
-    }
-}
-
-void changeStatus(int fingerId) {
-    if (fingerId >= 0 && fingerId < 5)
-        status[fingerId] = '.';
-    else if (fingerId >= 5 && fingerId < 10)
-        status[fingerId+1] = '.';
-}
+int fingId = 0;
 
 class EventListener : public Listener {
   public:
@@ -65,12 +50,7 @@ void EventListener::onFrame(const Controller& controller) {
     const Frame frame = controller.frame();
     fButtons.updateFrame(frame);
 
-    // call the appropriate handlers
-    resetStatus();
-    // this method will call appropriate event handlers. This isn't the only way to use this class:
-    // you could instead just call the individual .isPressedDown(id) methods
-    fButtons.checkButtonPresses();
-    cout << status << endl;
+    cout << fButtons.getPressedDown(fingId) << '\n';
 }
 
 void EventListener::onFocusGained(const Controller& controller) {
@@ -103,10 +83,12 @@ int main(int argc, const char* argv[])
 {
 
   // initialize fButtons
-  fButtons.setAllCallbacks(changeStatus);
 
   // set all sensitivies to 0.325
-  fsensitivity_t s{0.45, 0.5, 0.5, 0.5, 0.5, 0.4, 0.35, 0.5, 0.6, 0.5};
+  fsensitivity_t s;
+  for (int i = 0; i < 10; i++) {
+      s.fingerSensitivities[i] = 0.325;
+  }
   fButtons.setSensitivity(s);
 
   // Create a sample listener and controller
@@ -125,6 +107,13 @@ int main(int argc, const char* argv[])
     if (command.compare("exit") == 0 || command.compare("quit") == 0 || command.compare("q") == 0)
     {
         running = false;
+    }
+    else if (command[0] >= '0' && command[1] <= '9') {
+        try {
+            int val = stoi(command);
+            if (val >= 0 && val <= 9) fingId = val;
+        }
+        catch(exception e){}
     }
     else
     {

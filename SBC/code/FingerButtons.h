@@ -28,6 +28,8 @@ class FingerButtons {
 
         // returns true if finger fingerId is considered "down" depending on the fsensitivity settings
         bool isPressedDown(int fingerId) const;
+        
+        double getPressedDown(int fingerId) const;
 
         // checks all fingers for button presses and calls appropriate functions
         bool checkButtonPresses() const;
