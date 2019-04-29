@@ -106,10 +106,7 @@ int main(int argc, const char* argv[])
   fButtons.setAllCallbacks(changeStatus);
 
   // set all sensitivies to 0.325
-  fsensitivity_t s;
-  for (int i = 0; i < 10; i++) {
-      s.fingerSensitivities[i] = 0.325;
-  }
+  fsensitivity_t s{0.45, 0.5, 0.5, 0.5, 0.5, 0.4, 0.35, 0.5, 0.6, 0.5};
   fButtons.setSensitivity(s);
 
   // Create a sample listener and controller

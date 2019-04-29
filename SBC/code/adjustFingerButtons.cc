@@ -7,11 +7,12 @@
 #include <stdlib.h> // :( for system()
 
 #include "Leap.h"
-#include "Dpad.h"
+#include "FingerButtons.h"
 
 using namespace std;
 using namespace Leap;
-static Dpad dpad;
+static FingerButtons fButtons;
+int fingId = 0;
 
 class EventListener : public Listener {
   public:
@@ -47,19 +48,9 @@ void EventListener::onExit(const Controller& controller) {
 void EventListener::onFrame(const Controller& controller) {
     // Get the most recent frame and tell FingerButtons about it
     const Frame frame = controller.frame();
-    dpad.updateFrame(frame);
+    fButtons.updateFrame(frame);
 
-    // call the appropriate handlers
-    cout << "UP: " << boolalpha << dpad.up(Dpad::Hands::leftHand) << '\n';
-    cout << "DOWN: " << boolalpha << dpad.down(Dpad::Hands::leftHand)  << '\n';
-    cout << "LEFT: " << boolalpha << dpad.left(Dpad::Hands::leftHand)  << '\n';
-    cout << "RIGHT: " << boolalpha << dpad.right(Dpad::Hands::leftHand)  << '\n';
-    
-    cout << "UPRight: " << boolalpha << dpad.up(Dpad::Hands::rightHand)  << '\n';
-    cout << "DOWNRight: " << boolalpha << dpad.down(Dpad::Hands::rightHand)  << '\n';
-    cout << "LEFTRight: " << boolalpha << dpad.left(Dpad::Hands::rightHand)  << '\n';
-    cout << "RIGHTRight: " << boolalpha << dpad.right(Dpad::Hands::rightHand)  << '\n';
-    //cout << status << endl;
+    cout << fButtons.getPressedDown(fingId) << '\n';
 }
 
 void EventListener::onFocusGained(const Controller& controller) {
@@ -90,6 +81,16 @@ void EventListener::onServiceDisconnect(const Controller& controller) {
 
 int main(int argc, const char* argv[])
 {
+
+  // initialize fButtons
+
+  // set all sensitivies to 0.325
+  fsensitivity_t s;
+  for (int i = 0; i < 10; i++) {
+      s.fingerSensitivities[i] = 0.325;
+  }
+  fButtons.setSensitivity(s);
+
   // Create a sample listener and controller
   EventListener listener;
   Controller controller;
@@ -106,6 +107,13 @@ int main(int argc, const char* argv[])
     if (command.compare("exit") == 0 || command.compare("quit") == 0 || command.compare("q") == 0)
     {
         running = false;
+    }
+    else if (command[0] >= '0' && command[1] <= '9') {
+        try {
+            int val = stoi(command);
+            if (val >= 0 && val <= 9) fingId = val;
+        }
+        catch(exception e){}
     }
     else
     {

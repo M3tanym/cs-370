@@ -142,16 +142,13 @@ int main(int argc, char **argv)
 	fButtons.setAllCallbacks(changeStatus);
 
 	// Set all sensitivies
-	fsensitivity_t s;
-	for (int i = 0; i < 10; i++) {
-		s.fingerSensitivities[i] = 0.4;
-	}
+	fsensitivity_t s{0.45, 0.5, 0.5, 0.5, 0.48, 0.38, 0.35, 0.5, 0.6, 0.5};
 	fButtons.setSensitivity(s);
 
 	hsensitivity_t jsens;
 	jsens.joystickDeadzone = 30;
 	jsens.handDepthSensitivity = 300;
-	jsens.rangeOfMotionScalingFactor = 1;
+	jsens.joystickSensitivity = 1;
 	jsens.palmOffsets[0] = -300;  //      0 : left hand x offset
 	jsens.palmOffsets[1] = 100;  //      1 : left hand y offset
 	jsens.palmOffsets[2] = -128;  //      2 : left hand z offset
