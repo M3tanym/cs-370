@@ -69,17 +69,6 @@ void EventListener::onExit(const Controller& controller) {
   if(DEBUG > 1) cout << "[Controller] Exited" << endl;
 }
 
-void EventListener::onFrame(const Controller& controller) {
-	// Get the most recent frame and tell FingerButtons about it
-	const Frame frame = controller.frame();
-	fButtons.updateFrame(frame);
-	joysticks.updateFrame(frame);
-	dpad.updateFrame(frame);
-
-	// call the appropriate handlers
-	// cout << fingerState << endl;
-}
-
 void EventListener::onFocusGained(const Controller& controller) {
    if(DEBUG > 1) cout << "[Controller] Focus Gained" << endl;
 }
@@ -106,6 +95,16 @@ void EventListener::onServiceDisconnect(const Controller& controller) {
   if(DEBUG > 1) cout << "[Controller] Service Disconnected" << endl;
 }
 
+/******************** ONFRAME ********************/
+
+void EventListener::onFrame(const Controller& controller) {
+	// Get the most recent frame and tell the other classes about it
+	const Frame frame = controller.frame();
+	fButtons.updateFrame(frame);
+	joysticks.updateFrame(frame);
+	dpad.updateFrame(frame);
+}
+
 /******************** MAIN ********************/
 
 int main(int argc, char **argv)
@@ -113,7 +112,7 @@ int main(int argc, char **argv)
 	cout << "[System] Running!\n";
 	signal(SIGINT, catchIntr); // catch ^C with the catchIntr() function
 
-	// Create a sample listener and controller
+	// Create an event listener and controller
 	EventListener listener;
 	Controller controller;
 
@@ -123,13 +122,12 @@ int main(int argc, char **argv)
 	// Open the UDP port
 	Dongle dongle(PORT, PACKETDELAY);
 
-	// Initialize fButtons
-	fButtons.setAllCallbacks(changeStatus);
-
-	// Set all sensitivies:
+	// Set all sensitivies
+	
 	// Finger Buttons
 	fsensitivity_t s{0.45, 0.5, 0.5, 0.5, 0.45, 0.38, 0.35, 0.5, 0.6, 0.5};
 	fButtons.setSensitivity(s);
+	
 	// Joysticks
 	hsensitivity_t jsens;
 	jsens.joystickDeadzone = 30;
@@ -188,7 +186,7 @@ int main(int argc, char **argv)
 		dongle.update(js);
 	}
 
-  	// Remove the sample listener when done
+  	// Remove the listener when done
   	controller.removeListener(listener);
 	return 0;
 }
