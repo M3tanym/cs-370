@@ -88,6 +88,7 @@ void EventListener::onFrame(const Controller& controller) {
 	const Frame frame = controller.frame();
 	fButtons.updateFrame(frame);
 	joysticks.updateFrame(frame);
+	dpad.updateFrame(frame);
 
 	// call the appropriate handlers
 	resetStatus();
@@ -142,7 +143,7 @@ int main(int argc, char **argv)
 	fButtons.setAllCallbacks(changeStatus);
 
 	// Set all sensitivies
-	fsensitivity_t s{0.45, 0.5, 0.5, 0.5, 0.48, 0.38, 0.35, 0.5, 0.6, 0.5};
+	fsensitivity_t s{0.45, 0.5, 0.5, 0.5, 0.45, 0.38, 0.35, 0.5, 0.6, 0.5};
 	fButtons.setSensitivity(s);
 
 	hsensitivity_t jsens;
@@ -177,10 +178,10 @@ int main(int argc, char **argv)
 		js.buttonRightStick = fButtons.isPressedDown(8);
 		js.buttonLeftBumper = fButtons.isPressedDown(2);
 		js.buttonRightBumper = fButtons.isPressedDown(7);
-		js.buttonDUp = 0;
-		js.buttonDDown = 0;
-		js.buttonDLeft = 0;
-		js.buttonDRight = 0;
+		js.buttonDUp = dpad.up(Dpad::Hands::leftHand);
+		js.buttonDDown = dpad.down(Dpad::Hands::leftHand);
+		js.buttonDLeft = dpad.left(Dpad::Hands::leftHand);
+		js.buttonDRight = dpad.right(Dpad::Hands::leftHand);
 		js.leftStickX = joysticks.getPalmCoord('L', 'X');
 		js.leftStickY = joysticks.getPalmCoord('L', 'Z');
 		js.leftTrigger = 255 - joysticks.getPalmCoord('L', 'Y');
