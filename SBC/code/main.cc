@@ -28,28 +28,12 @@ static FingerButtons fButtons;
 static Joysticks joysticks;
 static Dpad dpad;
 
-static char fingerState[12] = "||||/ \\||||";
-
 /******************** VARIOUS FUNCTIONS ********************/
 
 void catchIntr(int)
 {
 	cout << "[System] Exiting...\n";
 	running = false;
-}
-
-void resetStatus() {
-	const char *cpy = "||||/ \\||||";
-	for (int i = 0; i < 12; i++) {
-		fingerState[i] = cpy[i];
-	}
-}
-
-void changeStatus(int fingerId) {
-	if (fingerId >= 0 && fingerId < 5)
-		fingerState[fingerId] = '.';
-	else if (fingerId >= 5 && fingerId < 10)
-		fingerState[fingerId+1] = '.';
 }
 
 /******************** EVENT LISTENER ********************/
@@ -93,8 +77,6 @@ void EventListener::onFrame(const Controller& controller) {
 	dpad.updateFrame(frame);
 
 	// call the appropriate handlers
-	resetStatus();
-	fButtons.checkButtonPresses();
 	// cout << fingerState << endl;
 }
 
