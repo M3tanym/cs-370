@@ -11,7 +11,8 @@ typedef struct handConfig_s {
     // height, in mm, that a hand must go below in order for a joystick button to be clicked
     double handDepthSensitivity;
 
-	double rangeOfMotionScalingFactor;
+	// multiplier for joystick sensitivity
+	double joystickSensitivity = 1;
     
     // array of values representing the amount, in mm, to offset the palm position of each hand
     // elements in the array are as follows:

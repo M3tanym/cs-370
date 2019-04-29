@@ -79,13 +79,6 @@ float Joysticks::getPalmCoord(char handLetter, char axis) const
     else throw ("Error: could not determine axis from given letter: "s + axis);
     
 
-	//if (axis == 'X' || axis == 'x')
-	//{
-	//	if ((handLetter == 'R' || handLetter == 'r') && (handPos[intAxis] < 0)) // is the right hand x negative?
-	//		return 128.0;
-	//	if ((handLetter == 'L' || handLetter == 'l') && (handPos[intAxis] > 0)) // is the left hand x positive?
-	//		return 128.0;
-	//}
 	if (handLetter == 'L' || handLetter == 'l')
 	{
 		if (!leftHand.isValid())
@@ -108,12 +101,7 @@ float Joysticks::getPalmCoord(char handLetter, char axis) const
 		return 128.0;
 	}
 
-	//if (offsetIndex < 0)
-	//	centerOffset = 0;
-	//else
-	//	centerOffset = config.palmOffsets[offsetIndex];
-
-	joystickVal = handPos[intAxis] - config.palmOffsets[offsetIndex];
+	joystickVal = (handPos[intAxis] - config.palmOffsets[offsetIndex]) * config.joystickSensitivity;
 
 	if (joystickVal > 255) joystickVal = 255;
 	else if (joystickVal < 0) joystickVal = 0;
