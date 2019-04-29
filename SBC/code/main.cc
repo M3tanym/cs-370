@@ -144,10 +144,11 @@ int main(int argc, char **argv)
 	// Initialize fButtons
 	fButtons.setAllCallbacks(changeStatus);
 
-	// Set all sensitivies
+	// Set all sensitivies:
+	// Finger Buttons
 	fsensitivity_t s{0.45, 0.5, 0.5, 0.5, 0.45, 0.38, 0.35, 0.5, 0.6, 0.5};
 	fButtons.setSensitivity(s);
-
+	// Joysticks
 	hsensitivity_t jsens;
 	jsens.joystickDeadzone = 30;
 	jsens.handDepthSensitivity = 300;
@@ -162,12 +163,11 @@ int main(int argc, char **argv)
 	
 	// Dpad sensitivities
 	dpadsens_t d;
-
-	//pitchMin/Max = 60 degrees/180 degrees in radians (Y-Z plane)
+	//pitchMin/Max (Y-Z plane)
 	d.pitchMin = 0.45;  
 	d.pitchMax = 3.14; 
-	//rollMin/Max = 60 degrees/180 degrees in radians (X-Y plane) 
-	d.rollMin = 0.3; 
+	//rollMin/Max (X-Y plane) 
+	d.rollMin = 0.45; 
 	//1.0472
 	d.rollMax = 3.14;  
 	dpad.setSensitivity(d);
