@@ -46,4 +46,4 @@ ifeq ($(OS), Darwin)
 endif
 
 clean:
-	rm -rf main testGesture testFButtons testJoysticks testDongle testDpad *.dSYM
+	rm -rf main testGesture testFingerButtons adjustFingerButtons testJoysticks testDongle testDpad *.dSYM
