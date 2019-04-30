@@ -7,4 +7,4 @@ SBC/code/testJoysticks
 SBC/code/testDpad
 SBC/code/testGesture
 SBC/code/*.dSYM/
-SBC/code/log.txt
+SBC/scripts/log.txt
