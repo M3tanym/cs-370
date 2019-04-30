@@ -125,7 +125,7 @@ int main(int argc, char **argv)
 	// Set all sensitivies
 	
 	// Finger Buttons
-	fsensitivity_t s{0.45, 0.5, 0.5, 0.5, 0.45, 0.38, 0.35, 0.5, 0.6, 0.5};
+	fsensitivity_t s{0.45, 0.5, 0.5, 0.5, 0.45, 0.38, 0.35, 0.5, 0.6, 0.65};
 	fButtons.setSensitivity(s);
 	
 	// Joysticks
