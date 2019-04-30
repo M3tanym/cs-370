@@ -2,7 +2,9 @@
 SBC/code/main
 SBC/code/testDongle
 SBC/code/testFingerButtons
+SBC/code/adjustFingerButtons
 SBC/code/testJoysticks
 SBC/code/testDpad
 SBC/code/testGesture
 SBC/code/*.dSYM/
+SBC/code/log.txt
