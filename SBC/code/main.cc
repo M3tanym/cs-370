@@ -133,23 +133,23 @@ int main(int argc, char **argv)
 	jsens.joystickDeadzone = 30;
 	jsens.handDepthSensitivity = 300;
 	jsens.joystickSensitivity = 2;
-	jsens.palmOffsets[0] = -150;  //      0 : left hand x offset
+	jsens.palmOffsets[0] = -192;  //      0 : left hand x offset
 	jsens.palmOffsets[1] = 150;  //      1 : left hand y offset
-	jsens.palmOffsets[2] = -128;  //      2 : left hand z offset
-	jsens.palmOffsets[3] = 150;  //      3 : right hand x offset
+	jsens.palmOffsets[2] = -64;  //      2 : left hand z offset
+	jsens.palmOffsets[3] = 64;  //      3 : right hand x offset
 	jsens.palmOffsets[4] = 150;  //      4 : right hand y offset
-	jsens.palmOffsets[5] = -128; //      5 : right hand z offset
+	jsens.palmOffsets[5] = -64; //      5 : right hand z offset
 	joysticks.setSensitivity(jsens);
 	
 	// Dpad sensitivities
 	dpadsens_t d;
 	//pitchMin/Max (Y-Z plane)
-	d.pitchMin = 0.45;  
-	d.pitchMax = 3.14; 
-	//rollMin/Max (X-Y plane) 
-	d.rollMin = 0.45; 
+	d.pitchMin = 0.45;
+	d.pitchMax = 3.14;
+	//rollMin/Max (X-Y plane)
+	d.rollMin = 0.42;
 	//1.0472
-	d.rollMax = 3.14;  
+	d.rollMax = 3.14;
 	dpad.setSensitivity(d);
 
   	// Connect to the dongle
