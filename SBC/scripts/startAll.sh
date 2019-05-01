@@ -7,6 +7,6 @@ fi
 # must be executed from this directory as root
 ./startWifi.sh
 ./startLeap.sh
-../code/main &
+sudo -u user tmux new -d -s auto '../code/main; read -p "./main has exited..."'
 
 
