@@ -22,7 +22,7 @@ using namespace Leap;
 
 constexpr int DEBUG = 0; // Debug level flag (0: off, 1: few, 2: more, 3: all)
 constexpr int PORT = 2342; // Arbitarily chosen value (> 1024). Must also be set in ESP code
-constexpr int PACKETDELAY = 15; // Empirically obtained optimal delay time (ms)
+constexpr int PACKETDELAY = 10; // Empirically obtained optimal delay time (ms)
 static bool running = true; // running flag
 
 static FingerButtons fButtons;
@@ -183,11 +183,11 @@ int main(int argc, char **argv)
 		js.buttonDDown = dpad.down(Dpad::Hands::leftHand);
 		js.buttonDLeft = dpad.left(Dpad::Hands::leftHand);
 		js.buttonDRight = dpad.right(Dpad::Hands::leftHand);
-		js.leftStickX = arduino.leftStickEnabled() ? joysticks.getPalmCoord('L', 'X') : 128;
-		js.leftStickY = arduino.leftStickEnabled() ? joysticks.getPalmCoord('L', 'Z') : 128;
+		js.leftStickX = arduino.leftStickEnabled ? joysticks.getPalmCoord('L', 'X') : 128;
+		js.leftStickY = arduino.leftStickEnabled ? joysticks.getPalmCoord('L', 'Z') : 128;
 		js.leftTrigger = 255 - joysticks.getPalmCoord('L', 'Y');
-		js.rightStickX = arduino.rightStickEnabled() ? joysticks.getPalmCoord('R', 'X') : 128;
-		js.rightStickY = arduino.rightStickEnabled() ? joysticks.getPalmCoord('R', 'Z') : 128;
+		js.rightStickX = arduino.rightStickEnabled ? joysticks.getPalmCoord('R', 'X') : 128;
+		js.rightStickY = arduino.rightStickEnabled ? joysticks.getPalmCoord('R', 'Z') : 128;
 		js.rightTrigger = 255 - joysticks.getPalmCoord('R', 'Y');
 
 		dongle.update(js);
