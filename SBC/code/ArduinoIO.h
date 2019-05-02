@@ -9,13 +9,11 @@ class ArduinoIO
   public:
     ArduinoIO();
     ~ArduinoIO();
-    bool leftStickEnabled();
-    bool rightStickEnabled();
+    bool leftStickEnabled = true;
+    bool rightStickEnabled = true;
     void setStatus(std::string s);
   private:
     std::string status = "0";
-    bool left = true;
-    bool right = true;
     bool running = true;
     bool needToWrite = true;
     std::thread t;

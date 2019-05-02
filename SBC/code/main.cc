@@ -183,11 +183,11 @@ int main(int argc, char **argv)
 		js.buttonDDown = dpad.down(Dpad::Hands::leftHand);
 		js.buttonDLeft = dpad.left(Dpad::Hands::leftHand);
 		js.buttonDRight = dpad.right(Dpad::Hands::leftHand);
-		js.leftStickX = arduino.leftStickEnabled()  ? joysticks.getPalmCoord('L', 'X') : 128;
-		js.leftStickY = arduino.rightStickEnabled() ? joysticks.getPalmCoord('L', 'Z') : 128;
+		js.leftStickX = arduino.leftStickEnabled() ? joysticks.getPalmCoord('L', 'X') : 128;
+		js.leftStickY = arduino.leftStickEnabled() ? joysticks.getPalmCoord('L', 'Z') : 128;
 		js.leftTrigger = 255 - joysticks.getPalmCoord('L', 'Y');
-		js.rightStickX = joysticks.getPalmCoord('R', 'X');
-		js.rightStickY = joysticks.getPalmCoord('R', 'Z');
+		js.rightStickX = arduino.rightStickEnabled() ? joysticks.getPalmCoord('R', 'X') : 128;
+		js.rightStickY = arduino.rightStickEnabled() ? joysticks.getPalmCoord('R', 'Z') : 128;
 		js.rightTrigger = 255 - joysticks.getPalmCoord('R', 'Y');
 
 		dongle.update(js);

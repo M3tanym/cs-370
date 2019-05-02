@@ -17,16 +17,6 @@ ArduinoIO::~ArduinoIO()
   t.join();
 }
 
-bool ArduinoIO::leftStickEnabled()
-{
-  return left;
-}
-
-bool ArduinoIO::rightStickEnabled()
-{
-  return right;
-}
-
 void ArduinoIO::setStatus(std::string s)
 {
   needToWrite = true;
@@ -78,8 +68,8 @@ void ArduinoIO::run()
     buf[len] = 0;
     if(len > 3 && buf[1] == ':')
     {
-      left = buf[0] == '0';
-      right = buf[2] == '0';
+      leftStickEnabled = buf[0] == '0';
+      rightStickEnabled = buf[2] == '0';
     }
     if(needToWrite)
     {
