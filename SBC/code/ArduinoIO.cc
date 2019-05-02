@@ -10,7 +10,6 @@ ArduinoIO::ArduinoIO()
 
 ArduinoIO::~ArduinoIO()
 {
-  std::cerr << "dtor!\n";
   running = false;
   t.join();
 }
@@ -32,9 +31,10 @@ void ArduinoIO::setStatus(std::string s)
 
 void ArduinoIO::run()
 {
-  arduino.open("/dev/ttyACM0", std::ios::in | std::ios::out);
+  std::fstream arduino("/dev/ttyACM0", std::ios::in | std::ios::out);
   while(running)
   {
+    std::cerr << "!\n";
     std::string s = "";
     alarm(1);
     getline(arduino, s);

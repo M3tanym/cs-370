@@ -2,7 +2,6 @@
 #define ArduinoIO_INCLUDED
 
 #include <string>
-#include <fstream>
 #include <thread>
 
 class ArduinoIO
@@ -14,12 +13,11 @@ class ArduinoIO
     bool rightStickEnabled();
     void setStatus(std::string s);
   private:
-    std::string status;
+    std::string status = "";
     bool left = true;
     bool right = true;
     bool running = true;
     std::thread t;
-    std::fstream arduino;
     void run();
 };
 
