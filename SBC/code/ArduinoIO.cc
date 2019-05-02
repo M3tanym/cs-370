@@ -1,7 +1,7 @@
 #include "ArduinoIO.h"
 
 #include <iostream>
-#include <unistd.h>
+#include <fstream>
 
 ArduinoIO::ArduinoIO()
 {
