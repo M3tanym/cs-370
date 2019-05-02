@@ -6,8 +6,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#include <iostream>
-
 ArduinoIO::ArduinoIO()
 {
   t = std::thread(&ArduinoIO::run, this);
@@ -70,9 +68,8 @@ void ArduinoIO::run()
     buf[len] = 0;
     if(len > 3 && buf[1] == ':')
     {
-      leftStickEnabled = buf[0] == '0';
-      rightStickEnabled = buf[2] == '0';
-      std::cerr << "leftStickEnabled: " << leftStickEnabled << ", rightStickEnabled: " << rightStickEnabled << std::endl;
+      leftStickEnabled = buf[0] == '1';
+      rightStickEnabled = buf[2] == '1';
     }
     if(needToWrite)
     {
