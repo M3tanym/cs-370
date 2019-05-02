@@ -12,7 +12,7 @@ ArduinoIO::ArduinoIO()
 ArduinoIO::~ArduinoIO()
 {
   running = false;
-  std::terminate();
+  std::terminate(); // kill all threads
 }
 
 bool ArduinoIO::leftStickEnabled()
@@ -37,9 +37,7 @@ void ArduinoIO::run()
   {
     std::cerr << "!\n";
     std::string s = "";
-    alarm(1);
     getline(arduino, s);
-    alarm(0);
     if(s[1] == ':' && s.size() == 3)
     {
       std::cerr << s << std::endl;
