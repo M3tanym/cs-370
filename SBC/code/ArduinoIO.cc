@@ -2,16 +2,13 @@
 #include <iostream>
 ArduinoIO::ArduinoIO()
 {
-  arduino.open("/dev/ttyACM0", std::ios::in | std::ios::out);
   t = std::thread(&ArduinoIO::run, this);
-  std::cerr << "done with ctor!\n";
 }
 
 ArduinoIO::~ArduinoIO()
 {
   std::cerr << "dtor!\n";
   running = false;
-  arduino.close();
   t.join();
 }
 
@@ -32,13 +29,17 @@ void ArduinoIO::setStatus(std::string s)
 
 void ArduinoIO::run()
 {
+  arduino.open("/dev/ttyACM0", std::ios::in | std::ios::out);
   while(running)
   {
     std::string s = "";
+    alarm(1);
     getline(arduino, s);
+    alarm(0);
     if(s[1] == ':' && s.size() == 3)
     {
       std::cerr << s << std::endl;
     }
   }
+  arduino.close();
 }
