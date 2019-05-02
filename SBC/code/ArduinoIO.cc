@@ -47,10 +47,7 @@ void ArduinoIO::catchSignal(int)
 void ArduinoIO::run()
 {
   ioReady = false;
-  int fd, res;
-  struct termios newtio;
-  //struct sigaction saio;
-  char buf[255];
+  int fd;
 
   // open the device to be non-blocking (read will return immediatly)
   fd = open(MODEMDEVICE, O_RDWR | O_NOCTTY | O_NONBLOCK);
@@ -63,6 +60,9 @@ void ArduinoIO::run()
   fcntl(fd, F_SETOWN, getpid());
   // Make the file descriptor asynchronous
   fcntl(fd, F_SETFL, FASYNC);
+
+  struct termios newtio, oldtio;
+  tcgetattr(fd, &oldtio);
   // set new port settings for canonical input processing
   newtio.c_cflag = BAUDRATE | CRTSCTS | CS8 | CLOCAL | CREAD;
   newtio.c_iflag = IGNPAR | ICRNL;
@@ -75,15 +75,24 @@ void ArduinoIO::run()
 
   while(running)
   {
-    usleep(100000);
+    usleep(1000);
     // after receiving SIGIO, wait_flag = FALSE, input is available and can be read */
     if(ioReady)
     {
-      res = read(fd, buf, 255);
-      buf[res] = 0;
-      std::cerr << "Input! " << buf << std::endl;
+      char buf[255];
+      int len = read(fd, buf, 255);
+      buf[len] = 0;
+      //std::cerr << len << buf << std::endl;
+      if(len > 3 && buf[1] == ':')
+      {
+        bool l = buf[0] == '0';
+	bool r = buf[2] == '0';
+        std::cerr << "Input! " << buf << "|" << std::boolalpha << l << ", " << r << std::endl;
+      }
       // wait for more input
       ioReady = false;
     }
   }
+  tcsetattr(fd,TCSANOW,&oldtio);  
+  close(fd);
 }
