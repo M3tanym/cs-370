@@ -52,10 +52,10 @@ void ArduinoIO::run()
   //struct sigaction saio;
   char buf[255];
 
- // open the device to be non-blocking (read will return immediatly)
- fd = open(MODEMDEVICE, O_RDWR | O_NOCTTY | O_NONBLOCK);
- if(fd < 0)
-  throw std::runtime_error("Couldn't connect to Arduino!");
+  // open the device to be non-blocking (read will return immediatly)
+  fd = open(MODEMDEVICE, O_RDWR | O_NOCTTY | O_NONBLOCK);
+  if(fd < 0)
+    throw std::runtime_error("Couldn't connect to Arduino!");
 
   // install the signal handler before making the device asynchronous
   //saio.sa_handler = catchSignal;
