@@ -21,6 +21,7 @@ ArduinoIO::ArduinoIO()
 ArduinoIO::~ArduinoIO()
 {
   running = false;
+  t.join()
 }
 
 bool ArduinoIO::leftStickEnabled()
@@ -57,12 +58,6 @@ void ArduinoIO::run()
   if(fd < 0)
     throw std::runtime_error("Couldn't connect to Arduino!");
 
-  // install the signal handler before making the device asynchronous
-  //saio.sa_handler = catchSignal;
-  //saio.sa_mask = 0;
-  //saio.sa_flags = 0;
-  //saio.sa_restorer = NULL;
-  //sigaction(SIGIO, &saio, NULL);
   signal(SIGIO, catchSignal);
 
   // allow the process to receive SIGIO
