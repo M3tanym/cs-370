@@ -17,11 +17,11 @@ CXX=/usr/bin/g++
 
 
 main: main.cc Dongle.cc ArduinoIO.cc FingerButtons.cc Joysticks.cc Dpad.cc
-	$(CXX) -std=c++14 -Wall -g -I../include main.cc Dongle.cc ArduinoIO.cc FingerButtons.cc Joysticks.cc Dpad.cc -o $@ $(LEAP_LIBRARY)
+	$(CXX) -std=c++14 -Wall -g -I../include -lpthread main.cc Dongle.cc ArduinoIO.cc FingerButtons.cc Joysticks.cc Dpad.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
 
 testDongle: testDongle.cc Dongle.cc USBController.cc
-	$(CXX) -std=c++14 -Wall -g -I../include -l SDL2 testDongle.cc Dongle.cc USBController.cc -o $@
+	$(CXX) -std=c++14 -Wall -g -I../include -lSDL2 testDongle.cc Dongle.cc USBController.cc -o $@
 	make fixLib exName=$@
 
 testFingerButtons: testFingerButtons.cc FingerButtons.cc
