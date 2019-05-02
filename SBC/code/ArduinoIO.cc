@@ -21,7 +21,7 @@ ArduinoIO::ArduinoIO()
 ArduinoIO::~ArduinoIO()
 {
   running = false;
-  t.join()
+  t.join();
 }
 
 bool ArduinoIO::leftStickEnabled()
@@ -41,7 +41,6 @@ void ArduinoIO::setStatus(std::string s)
 
 void ArduinoIO::catchSignal(int)
 {
-  std::cerr << "received SIGIO signal.\n";
   ioReady = true;
 }
 
@@ -76,7 +75,6 @@ void ArduinoIO::run()
 
   while(running)
   {
-    std::cerr << "waiting...\n";
     usleep(100000);
     // after receiving SIGIO, wait_flag = FALSE, input is available and can be read */
     if(ioReady)
