@@ -81,12 +81,13 @@ void ArduinoIO::run()
     buf[len] = 0;
     if(len > 3 && buf[1] == ':')
     {
-      bool l = buf[0] == '0';
-      bool r = buf[2] == '0';
-      setStatus(!l ? "0" : "3");
+      left = buf[0] == '0';
+      right = buf[2] == '0';
+      setStatus(!left ? "0" : "4");
     }
     if(needToWrite)
     {
+      needToWrite = false;
       std::cerr << "writing " << status << std::endl;
       write(fd, status.c_str(), status.size() + 1);
     }
