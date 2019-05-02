@@ -12,32 +12,33 @@ else
   LEAP_LIBRARY := ../lib/libLeap.dylib
 endif
 
+CXXFLAGS=-Wall
 CXX=/usr/bin/g++
 
 
 
 main: main.cc Dongle.cc ArduinoIO.cc FingerButtons.cc Joysticks.cc Dpad.cc
-	$(CXX) -std=c++14 -Wall -g -I../include -pthread main.cc Dongle.cc ArduinoIO.cc FingerButtons.cc Joysticks.cc Dpad.cc -o $@ $(LEAP_LIBRARY)
+	$(CXX) $(CXXFLAGS) -std=c++14 -Wall -g -I../include -pthread main.cc Dongle.cc ArduinoIO.cc FingerButtons.cc Joysticks.cc Dpad.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
 
 testDongle: testDongle.cc Dongle.cc USBController.cc
-	$(CXX) -std=c++14 -Wall -g -I../include -lSDL2 testDongle.cc Dongle.cc USBController.cc -o $@
+	$(CXX) $(CXXFLAGS) -std=c++14 -Wall -g -I../include -lSDL2 testDongle.cc Dongle.cc USBController.cc -o $@
 	make fixLib exName=$@
 
 testFingerButtons: testFingerButtons.cc FingerButtons.cc
-	$(CXX) -std=c++14 -Wall -g -I../include testFingerButtons.cc FingerButtons.cc -o $@ $(LEAP_LIBRARY)
+	$(CXX) $(CXXFLAGS) -std=c++14 -Wall -g -I../include testFingerButtons.cc FingerButtons.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
 
 adjustFingerButtons: adjustFingerButtons.cc FingerButtons.cc
-	$(CXX) -std=c++14 -Wall -g -I../include adjustFingerButtons.cc FingerButtons.cc -o $@ $(LEAP_LIBRARY)
+	$(CXX) $(CXXFLAGS) -std=c++14 -Wall -g -I../include adjustFingerButtons.cc FingerButtons.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
 
 testJoysticks: testJoysticks.cc Joysticks.cc
-	$(CXX) -std=c++14 -Wall -g -I../include testJoysticks.cc Joysticks.cc -o $@ $(LEAP_LIBRARY)
+	$(CXX) $(CXXFLAGS) -std=c++14 -Wall -g -I../include testJoysticks.cc Joysticks.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
 
 testDpad: testDpad.cc Dpad.cc
-	$(CXX) -std=c++14 -Wall -g -I../include testDpad.cc Dpad.cc -o $@ $(LEAP_LIBRARY)
+	$(CXX) $(CXXFLAGS) -std=c++14 -Wall -g -I../include testDpad.cc Dpad.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
 
 fixLib:
