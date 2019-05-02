@@ -10,6 +10,7 @@
 
 #include "Leap.h"
 #include "Dongle.h"
+#include "ArduinoIO.h"
 #include "FingerButtons.h"
 #include "Joysticks.h"
 #include "Dpad.h"
@@ -112,6 +113,9 @@ int main(int argc, char **argv)
 	cout << "[System] Running!\n";
 	signal(SIGINT, catchIntr); // catch ^C with the catchIntr() function
 
+	// Create a file to talk to the Arduino for button interfacing
+	ArduinoIO arduino;
+
 	// Create an event listener and controller
 	EventListener listener;
 	Controller controller;
@@ -123,11 +127,11 @@ int main(int argc, char **argv)
 	Dongle dongle(PORT, PACKETDELAY);
 
 	// Set all sensitivies
-	
+
 	// Finger Buttons
 	fsensitivity_t s{0.45, 0.5, 0.5, 0.5, 0.45, 0.38, 0.35, 0.5, 0.6, 0.65};
 	fButtons.setSensitivity(s);
-	
+
 	// Joysticks
 	hsensitivity_t jsens;
 	jsens.joystickDeadzone = 30;
@@ -140,8 +144,8 @@ int main(int argc, char **argv)
 	jsens.palmOffsets[4] = 150;  //      4 : right hand y offset
 	jsens.palmOffsets[5] = -64; //      5 : right hand z offset
 	joysticks.setSensitivity(jsens);
-	
-	// Dpad sensitivities
+
+	// Dpad
 	dpadsens_t d;
 	//pitchMin/Max (Y-Z plane)
 	d.pitchMin = 0.45;
@@ -152,7 +156,7 @@ int main(int argc, char **argv)
 	d.rollMax = 3.14;
 	dpad.setSensitivity(d);
 
-  	// Connect to the dongle
+  // Connect to the dongle
 	cout << "[System] Setup complete! Waiting for dongle...\n";
 	while(running && !dongle.waitForClient()); // wait until client sends a packet
 
@@ -186,7 +190,7 @@ int main(int argc, char **argv)
 		dongle.update(js);
 	}
 
-  	// Remove the listener when done
-  	controller.removeListener(listener);
+  // Remove the listener when done
+  controller.removeListener(listener);
 	return 0;
 }

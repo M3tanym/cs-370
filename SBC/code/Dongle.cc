@@ -23,7 +23,7 @@ Dongle::Dongle(int port, size_t packetDelay) : packetDelay(packetDelay)
 	hostAddr.sin_port = htons(port);
 
 	if(bind(fd, (struct sockaddr *)&hostAddr, sizeof(hostAddr)) < 0)
-		throw std::runtime_error("Couldn't bind!");
+		throw std::runtime_error("Couldn't bind socket!");
 }
 
 Dongle::~Dongle()
