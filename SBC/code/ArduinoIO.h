@@ -12,7 +12,6 @@ class ArduinoIO
     bool leftStickEnabled();
     bool rightStickEnabled();
     void setStatus(std::string s);
-    static void catchSignal(int);
   private:
     std::string status = "";
     bool left = true;

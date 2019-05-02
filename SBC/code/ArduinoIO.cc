@@ -9,8 +9,6 @@
 #include <sys/signal.h>
 #include <sys/types.h>
 
-static bool ioReady;
-
 ArduinoIO::ArduinoIO()
 {
   t = std::thread(&ArduinoIO::run, this);
@@ -37,22 +35,13 @@ void ArduinoIO::setStatus(std::string s)
   status = s;
 }
 
-void ArduinoIO::catchSignal(int)
-{
-  ioReady = true;
-}
-
 void ArduinoIO::run()
 {
-  ioReady = false;
   int fd = open("/dev/ttyACM0", O_RDWR);
-  // open(MODEMDEVICE, O_RDWR | O_NOCTTY | O_NONBLOCK);
   if(fd < 0)
     throw std::runtime_error("Couldn't connect to Arduino!");
 
-  // signal(SIGIO, catchSignal);
-
-  // Create new termios strucr
+  // Create new termios struct
   struct termios tty;
   memset(&tty, 0, sizeof tty);
   // Read in existing settings, and handle any error
@@ -73,7 +62,7 @@ void ArduinoIO::run()
   tty.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL); // No special handling of received bytes
   tty.c_oflag &= ~OPOST;   // Prevent special interpretation of output bytes (e.g. newline chars)
   tty.c_oflag &= ~ONLCR;   // Prevent conversion of newline to carriage return/line feed
-  tty.c_cc[VTIME] = 10;    // Wait for up to 1s (10 deciseconds), returning as soon as any data is received
+  tty.c_cc[VTIME] = 2;    // Wait for up to 2 deciseconds, returning as soon as any data is received
   tty.c_cc[VMIN] = 0;
 
   // Set in/out baud rate to be 9600
@@ -86,24 +75,17 @@ void ArduinoIO::run()
 
   while(running)
   {
-    ioReady = true;
-    std::cerr << "waiting...\n";
-    // usleep(1000);
-    // after receiving SIGIO, wait_flag = FALSE, input is available and can be read
-    if(ioReady)
+    char buf[255];
+    int len = read(fd, buf, 255);
+    buf[len] = 0;
+    if(len > 3 && buf[1] == ':')
     {
-      char buf[255];
-      int len = read(fd, buf, 255);
-      buf[len] = 0;
-      //std::cerr << len << buf << std::endl;
-      if(len > 3 && buf[1] == ':')
-      {
-        bool l = buf[0] == '0';
-        bool r = buf[2] == '0';
-        std::cerr << "Input! " << buf << "|" << std::boolalpha << l << ", " << r << std::endl;
-      }
-      // wait for more input
-      ioReady = false;
+      bool l = buf[0] == '0';
+      bool r = buf[2] == '0';
+      std::cerr << "Input! " << std::boolalpha << l << ", " << r << std::endl;
+      setStatus(l ? "0" : "2");
+      std::cerr << "write of size " << status.size() << std::endl;
+      write(fd, status.c_str(), status.size());
     }
   }
   close(fd);
