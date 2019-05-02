@@ -17,7 +17,7 @@ CXX=/usr/bin/g++
 
 
 main: main.cc Dongle.cc ArduinoIO.cc FingerButtons.cc Joysticks.cc Dpad.cc
-	$(CXX) -std=c++14 -Wall -g -I../include -lpthread main.cc Dongle.cc ArduinoIO.cc FingerButtons.cc Joysticks.cc Dpad.cc -o $@ $(LEAP_LIBRARY)
+	$(CXX) -std=c++14 -Wall -g -I../include -pthread main.cc Dongle.cc ArduinoIO.cc FingerButtons.cc Joysticks.cc Dpad.cc -o $@ $(LEAP_LIBRARY)
 	make fixLib exName=$@
 
 testDongle: testDongle.cc Dongle.cc USBController.cc
