@@ -84,8 +84,8 @@ void ArduinoIO::run()
       bool r = buf[2] == '0';
       std::cerr << "Input! " << std::boolalpha << l << ", " << r << std::endl;
       setStatus(l ? "0" : "2");
-      std::cerr << "write of size " << status.size() << std::endl;
-      write(fd, status.c_str(), status.size());
+      std::cerr << "writing " << status << std::endl;
+      write(fd, status.c_str(), status.size() + 1);
     }
   }
   close(fd);
