@@ -62,7 +62,7 @@ void ArduinoIO::run()
   tty.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL); // No special handling of received bytes
   tty.c_oflag &= ~OPOST;   // Prevent special interpretation of output bytes (e.g. newline chars)
   tty.c_oflag &= ~ONLCR;   // Prevent conversion of newline to carriage return/line feed
-  tty.c_cc[VTIME] = 2;    // Wait for up to 2 deciseconds, returning as soon as any data is received
+  tty.c_cc[VTIME] = 5;    // Wait for up to 5 deciseconds, returning as soon as any data is received
   tty.c_cc[VMIN] = 0;
 
   // Set in/out baud rate to be 9600
@@ -82,11 +82,10 @@ void ArduinoIO::run()
     {
       bool l = buf[0] == '0';
       bool r = buf[2] == '0';
-      std::cerr << "Input! " << std::boolalpha << l << ", " << r << std::endl;
-      setStatus(l ? "0" : "2");
-      std::cerr << "writing " << status << std::endl;
-      write(fd, status.c_str(), status.size() + 1);
+      setStatus(!l ? "0" : "2");
     }
+    std::cerr << "writing " << status << std::endl;
+    write(fd, status.c_str(), status.size() + 1);
   }
   close(fd);
 }

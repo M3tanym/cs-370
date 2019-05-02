@@ -13,7 +13,7 @@ class ArduinoIO
     bool rightStickEnabled();
     void setStatus(std::string s);
   private:
-    std::string status = "";
+    std::string status = "0";
     bool left = true;
     bool right = true;
     bool running = true;
