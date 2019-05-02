@@ -72,7 +72,7 @@ void ArduinoIO::run()
     {
       leftStickEnabled = buf[0] == '0';
       rightStickEnabled = buf[2] == '0';
-      std::cerr << "leftStickEnabled: " leftStickEnabled << ", rightStickEnabled: " << rightStickEnabled << std::endl;
+      std::cerr << "leftStickEnabled: " << leftStickEnabled << ", rightStickEnabled: " << rightStickEnabled << std::endl;
     }
     if(needToWrite)
     {
