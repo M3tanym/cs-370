@@ -115,7 +115,7 @@ int main(int argc, char **argv)
 
 	// Create a file to talk to the Arduino for button interfacing
 	ArduinoIO arduino;
-	arduino.setStatus("5");
+	arduino.setStatus("6");
 
 	// Create an event listener and controller
 	EventListener listener;
@@ -162,6 +162,7 @@ int main(int argc, char **argv)
 	while(running && !dongle.waitForClient()); // wait until client sends a packet
 
 	if(running) cout << "[System] Dongle Identified! (" << dongle.getClientIP() << ")\n";
+	arduino.setStatus("5");
 
 	while(running) // Runs until ^C
 	{
@@ -193,5 +194,6 @@ int main(int argc, char **argv)
 
   // Remove the listener when done
   controller.removeListener(listener);
+	arduino.setStatus("0");
 	return 0;
 }

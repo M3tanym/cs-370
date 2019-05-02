@@ -22,4 +22,15 @@ class ArduinoIO
     void run();
 };
 
+/* setStatus options:
+0 - off
+1 - white
+2 - red
+3 - orange
+4 - green
+5 - turquoise
+6 - blue
+7 - purple
+*/
+
 #endif
