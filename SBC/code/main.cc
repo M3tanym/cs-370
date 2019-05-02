@@ -22,7 +22,7 @@ using namespace Leap;
 
 constexpr int DEBUG = 0; // Debug level flag (0: off, 1: few, 2: more, 3: all)
 constexpr int PORT = 2342; // Arbitarily chosen value (> 1024). Must also be set in ESP code
-constexpr int PACKETDELAY = 11; // Empirically obtained optimal delay time (ms)
+constexpr int PACKETDELAY = 10; // Empirically obtained optimal delay time (ms)
 static bool running = true; // running flag
 
 static FingerButtons fButtons;
