@@ -115,6 +115,7 @@ int main(int argc, char **argv)
 
 	// Create a file to talk to the Arduino for button interfacing
 	ArduinoIO arduino;
+	arduino.setStatus("5");
 
 	// Create an event listener and controller
 	EventListener listener;

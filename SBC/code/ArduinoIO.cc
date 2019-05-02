@@ -1,13 +1,10 @@
 #include "ArduinoIO.h"
 
-#include <iostream>
 #include <termios.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/signal.h>
-#include <sys/types.h>
 
 ArduinoIO::ArduinoIO()
 {
@@ -83,12 +80,10 @@ void ArduinoIO::run()
     {
       left = buf[0] == '0';
       right = buf[2] == '0';
-      setStatus(!left ? "0" : "4");
     }
     if(needToWrite)
     {
       needToWrite = false;
-      std::cerr << "writing " << status << std::endl;
       write(fd, status.c_str(), status.size() + 1);
     }
   }
