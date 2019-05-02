@@ -17,6 +17,7 @@ class ArduinoIO
     bool left = true;
     bool right = true;
     bool running = true;
+    bool needToWrite = true;
     std::thread t;
     void run();
 };

@@ -32,6 +32,7 @@ bool ArduinoIO::rightStickEnabled()
 
 void ArduinoIO::setStatus(std::string s)
 {
+  needToWrite = true;
   status = s;
 }
 
@@ -82,10 +83,13 @@ void ArduinoIO::run()
     {
       bool l = buf[0] == '0';
       bool r = buf[2] == '0';
-      setStatus(!l ? "0" : "2");
+      setStatus(!l ? "0" : "3");
     }
-    std::cerr << "writing " << status << std::endl;
-    write(fd, status.c_str(), status.size() + 1);
+    if(needToWrite)
+    {
+      std::cerr << "writing " << status << std::endl;
+      write(fd, status.c_str(), status.size() + 1);
+    }
   }
   close(fd);
 }
