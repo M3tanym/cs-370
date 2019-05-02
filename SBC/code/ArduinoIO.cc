@@ -12,7 +12,7 @@ ArduinoIO::ArduinoIO()
 ArduinoIO::~ArduinoIO()
 {
   running = false;
-  t.join();
+  std::terminate();
 }
 
 bool ArduinoIO::leftStickEnabled()
