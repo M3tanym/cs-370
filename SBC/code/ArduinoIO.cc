@@ -1,5 +1,8 @@
 #include "ArduinoIO.h"
+
 #include <iostream>
+#include <unistd.h>
+
 ArduinoIO::ArduinoIO()
 {
   t = std::thread(&ArduinoIO::run, this);
