@@ -3,7 +3,8 @@
 while :
 do
  ../code/main
- sleep 1
+ echo "stopped! running again in 2s..."
+ sleep 2
 done
 
 
