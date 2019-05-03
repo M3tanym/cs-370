@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# this script gets called at shutdown
+# this script gets called at shutdown by  /etc/acpi/events/powerbtn (had to edit etc/systemd/logind.conf to ignore power button)
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root"
    exit 1
