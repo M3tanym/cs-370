@@ -9,7 +9,7 @@ fi
 cd /home/user/Desktop/
 
 sudo -u user tmux send-keys -t auto C-C
-sleep 1
+sleep 2
 sudo -u user tmux kill-session -t auto
 cd CS370-Term-Project/SBC/scripts
 sudo ./stopWifi.sh
