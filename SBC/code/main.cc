@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <unistd.h>
 
 #include "Leap.h"
 #include "Dongle.h"
@@ -116,6 +117,7 @@ int main(int argc, char **argv)
 	// Create a file to talk to the Arduino for button interfacing
 	ArduinoIO arduino;
 	arduino.setStatus("2");
+        usleep(1000 * 1000 * 2); // wait for 2 seconds to show LED status
 
 	// Create an event listener and controller
 	EventListener listener;
@@ -157,7 +159,7 @@ int main(int argc, char **argv)
 	d.rollMax = 3.14;
 	dpad.setSensitivity(d);
 
-  // Connect to the dongle
+        // Connect to the dongle
 	cout << "[System] Setup complete! Waiting for dongle...\n";
 	arduino.setStatus("6");
 	while(running && !dongle.waitForClient()); // wait until client sends a packet
@@ -195,6 +197,6 @@ int main(int argc, char **argv)
 
   // Remove the listener when done
   controller.removeListener(listener);
-	arduino.setStatus("0");
-	return 0;
+  arduino.setStatus("0");
+  return 0;
 }
